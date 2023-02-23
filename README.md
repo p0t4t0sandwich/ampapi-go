@@ -20,20 +20,20 @@ Need to setup as go package
 package main
 
 import (
-	"ampapi/ampapi"
-	"fmt"
+    "ampapi/ampapi"
+    "fmt"
 )
 
 func main() {
-	API := ampapi.NewAMPAPI("http://localhost:8080/")
+    API := ampapi.NewAMPAPI("http://localhost:8080/")
 
-	res := API.Login("username", "password", "", false)
+    res := API.Login("username", "password", "", false)
 
-	fmt.Println(res)
+    fmt.Println(res)
 
-	res2 := API.Call("ADSModule", "GetInstances", nil)
+    res2 := API.Call("ADSModule", "GetInstances", nil)
 
-	fmt.Println(res2)
+    fmt.Println(res2)
 }
 ```
 
@@ -45,5 +45,6 @@ The alternative to this will be to manually auto-generate the API methods based 
 
 ## ToDo
 
-[ ] Implement ampapi.*AMPAPI.Init()
-[ ] Implement async methods (be it using lambdas or auto-generated functions)
+- [ ] Implement ampapi.*AMPAPI.Init()
+
+- [ ] Implement async methods (be it using lambdas or auto-generated functions)
