@@ -45,6 +45,8 @@ The alternative to this will be to manually auto-generate the API methods based 
 
 ## ToDo
 
+- [ ] Get ampapi-go set up as a Go package
+
 - [ ] Implement `ampapi.*AMPAPI.Init()`
 
 - [ ] Implement async methods (be it using lambdas or auto-generated functions)
