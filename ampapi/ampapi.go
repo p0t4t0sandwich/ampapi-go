@@ -9,59 +9,72 @@ import (
 	"os"
 )
 
+// AMPAPI struct
 type AMPAPI struct {
-	baseURI    string
-	sessionId  string
-	dataSource string
-	APISpec    map[string]map[string]map[string]interface{}
-	API        map[string]map[string]func([]interface{}) string
+	BaseURI         string
+	DataSource      string
+	Username        string
+	Password        string
+	RememberMeToken string
+	SessionId       string
 }
 
-func NewAMPAPI(baseURI string) *AMPAPI {
-	baseUri := baseURI
-	var dataSource string = ""
+// NewAMPAPI creates a new AMPAPI object
+func NewAMPAPI(baseUri string, optional ...string) *AMPAPI {
+	ampapi := &AMPAPI{}
+
+	ampapi.BaseURI = baseUri
 	if string(baseUri[len(baseUri)-1]) == "/" {
-		dataSource = baseUri + "API"
+		ampapi.DataSource = baseUri + "API"
 	} else {
-		dataSource = baseUri + "/API"
+		ampapi.DataSource = baseUri + "/API"
+	}
+	if len(optional) > 0 {
+		ampapi.Username = optional[0]
+	} else {
+		ampapi.Username = ""
+	}
+	if len(optional) > 1 {
+		ampapi.Password = optional[1]
+	} else {
+		ampapi.Password = ""
+	}
+	if len(optional) > 2 {
+		ampapi.RememberMeToken = optional[2]
+	} else {
+		ampapi.RememberMeToken = ""
+	}
+	if len(optional) > 3 {
+		ampapi.SessionId = optional[3]
+	} else {
+		ampapi.SessionId = ""
 	}
 
-	return &AMPAPI{
-		baseURI:    baseURI,
-		sessionId:  "",
-		dataSource: dataSource,
-		APISpec:    map[string]map[string]map[string]interface{}{"Core": {"GetAPISpec": {}}},
-		API:        map[string]map[string]func([]interface{}) string{},
+	if ampapi.Username != "" && (ampapi.Password != "" || ampapi.RememberMeToken != "") {
+		ampapi.Login()
 	}
+	return ampapi
 }
 
-// APICall is a function that takes an endpoint and returns the response as a string
-func (a *AMPAPI) aPICall(module string, methodName string, args []interface{}) string {
-	data := map[string]interface{}{}
-	method := a.APISpec[module][methodName]
+// Var for the request method
+var RequestMethod = "POST"
 
-	val, ok := method["Parameters"]
-	if ok {
-		methodParams := val.([]interface{})
-
-		for i := 0; i <= len(methodParams)-1; i++ {
-			key := methodParams[i].(map[string]interface{})["Name"].(string)
-			data[key] = args[i]
-		}
-	}
-
-	data["SESSIONID"] = a.sessionId
+// apiCall is a function that takes an endpoint and returns the response
+func (ampapi *AMPAPI) ApiCall(endpoint string, args map[string]any) []byte {
+	args["SESSIONID"] = ampapi.SessionId
 
 	body := new(bytes.Buffer)
-	json.NewEncoder(body).Encode(data)
+	json.NewEncoder(body).Encode(args)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", a.dataSource+"/"+module+"/"+methodName, body)
+	req, err := http.NewRequest(RequestMethod, ampapi.DataSource+"/"+endpoint, body)
 	if err != nil {
 		fmt.Print(err.Error())
 		os.Exit(1)
 	}
 	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("User-Agent", "ampapi-go/1.0.0")
 	resp, err := client.Do(req)
 
 	if err != nil {
@@ -75,96 +88,24 @@ func (a *AMPAPI) aPICall(module string, methodName string, args []interface{}) s
 		os.Exit(1)
 	}
 
-	return string(result)
+	return result
 }
 
-func (a *AMPAPI) Login(username string, password string, token string, rememberMe bool) map[string]interface{} {
-	if a.APISpec["Core"]["Login"] == nil {
-		res := a.aPICall("Core", "GetAPISpec", nil)
-		var result map[string]map[string]map[string]map[string]interface{}
-		err := json.Unmarshal([]byte(res), &result)
+// Login is an easy wrapper function for the Core/Login endpoint
+func (ampapi *AMPAPI) Login() LoginResult {
+	var args = make(map[string]any)
+	args["username"] = ampapi.Username
+	args["password"] = ampapi.Password
+	args["token"] = ampapi.RememberMeToken
+	args["rememberMe"] = true
 
-		if err != nil {
-			fmt.Print(err.Error())
-			return nil
-		}
+	var loginResult LoginResult
+	json.Unmarshal(ampapi.ApiCall("Core/Login", args), &loginResult)
 
-		a.APISpec = result["result"]
-	}
-
-	res := a.aPICall("Core", "Login", []interface{}{username, password, token, rememberMe})
-
-	var loginResult map[string]interface{}
-	err := json.Unmarshal([]byte(res), &loginResult)
-	if err != nil {
-		fmt.Print(err.Error())
-		return nil
-	}
-
-	if loginResult["success"].(bool) {
-		a.sessionId = loginResult["sessionID"].(string)
+	if loginResult.Success {
+		ampapi.SessionId = loginResult.SessionId
+		ampapi.RememberMeToken = loginResult.RememberMeToken
 	}
 
 	return loginResult
 }
-
-func (a *AMPAPI) Call(module string, method string, args []interface{}) string {
-	if a.APISpec[module] == nil || a.APISpec[module][method] == nil {
-		res := a.aPICall("Core", "GetAPISpec", nil)
-		var result map[string]map[string]map[string]map[string]interface{}
-		err := json.Unmarshal([]byte(res), &result)
-
-		if err != nil {
-			fmt.Print(err.Error())
-			return "{\"success\":false}"
-		}
-
-		a.APISpec = result["result"]
-	}
-
-	res := a.aPICall(module, method, args)
-
-	return res
-}
-
-// func (a *AMPAPI) Init(stage2 bool) bool {
-// 	for module := range a.APISpec {
-// 		for method := range a.APISpec[module] {
-// 			if a.API[module] == nil {
-// 				a.API[module] = map[string]func([]interface{}) string{}
-// 			}
-// 			a.API[module][method] = func(args []interface{}) string {
-// 				m := Method{
-// 					module: module,
-// 					method: method,
-// 				}
-
-// 				return a.APICall(m, args)
-// 			}
-
-// 			fmt.Println(module)
-// 			fmt.Println(method)
-// 			fmt.Println(a.API[module][method])
-// 		}
-// 	}
-
-// 	if stage2 {
-// 		return true
-// 	} else {
-// 		res := a.API["Core"]["GetAPISpec"](nil)
-
-// 		var result map[string]map[string]map[string]map[string]interface{}
-// 		err := json.Unmarshal([]byte(res), &result)
-// 		if err != nil {
-// 			fmt.Print(err.Error())
-// 			return false
-// 		}
-
-// 		if (result != nil) && (result["result"] != nil) {
-// 			a.APISpec = result["result"]
-// 			return a.Init(true)
-// 		} else {
-// 			return false
-// 		}
-// 	}
-// }
