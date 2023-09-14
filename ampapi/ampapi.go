@@ -21,14 +21,14 @@ type AMPAPI struct {
 
 // NewAMPAPI creates a new AMPAPI object
 func NewAMPAPI(baseUri string, optional ...string) *AMPAPI {
-	ampapi := &AMPAPI{}
+	var ampapi *AMPAPI = new(AMPAPI)
 
 	ampapi.BaseURI = baseUri
-	if string(baseUri[len(baseUri)-1]) == "/" {
-		ampapi.DataSource = baseUri + "API"
-	} else {
-		ampapi.DataSource = baseUri + "/API"
+	if string(baseUri[len(baseUri)-1]) != "/" {
+		ampapi.BaseURI += "/"
 	}
+	ampapi.DataSource = ampapi.BaseURI + "API/"
+
 	if len(optional) > 0 {
 		ampapi.Username = optional[0]
 	} else {
@@ -50,9 +50,6 @@ func NewAMPAPI(baseUri string, optional ...string) *AMPAPI {
 		ampapi.SessionId = ""
 	}
 
-	if ampapi.Username != "" && (ampapi.Password != "" || ampapi.RememberMeToken != "") {
-		ampapi.Login()
-	}
 	return ampapi
 }
 
@@ -67,7 +64,7 @@ func (ampapi *AMPAPI) ApiCall(endpoint string, args map[string]any) []byte {
 	json.NewEncoder(body).Encode(args)
 
 	client := &http.Client{}
-	req, err := http.NewRequest(RequestMethod, ampapi.DataSource+"/"+endpoint, body)
+	req, err := http.NewRequest(RequestMethod, ampapi.DataSource+endpoint, body)
 	if err != nil {
 		fmt.Print(err.Error())
 		os.Exit(1)
@@ -91,7 +88,7 @@ func (ampapi *AMPAPI) ApiCall(endpoint string, args map[string]any) []byte {
 	return result
 }
 
-// Login is an easy wrapper function for the Core/Login endpoint
+// Simplified login function
 func (ampapi *AMPAPI) Login() LoginResult {
 	var args = make(map[string]any)
 	args["username"] = ampapi.Username

@@ -1,16 +1,21 @@
-#!/bin/python3
-# author: p0t4t0sandich
-# description: A Python library for the AMP API
+package apimodules
 
-from typing import Any
-from ampapi.ampapi import AMPAPI
+// A Go library for the AMP API
+// Author: p0t4t0sandich
 
+import (
+	"ampapi/ampapi"
+	"encoding/json"
+)
 
-class %MODULE_NAME%(AMPAPI):
-    def __init__(self, ampapi: AMPAPI) -> None:
-        """Initializes the %MODULE_NAME% class
-        :param ampapi: The AMPAPI class to clone
-        :returns: None
-        """
-        super().__init__(ampapi.baseUri, ampapi.username, ampapi.password, ampapi.rememberMeToken, ampapi.sessionId)
+// struct %MODULE_NAME%
+type %MODULE_NAME% struct {
+    *ampapi.AMPAPI
+}
+
+// Function New%MODULE_NAME%
+// Creates a new %MODULE_NAME% object
+func New%MODULE_NAME%(api *ampapi.AMPAPI) *%MODULE_NAME% {
+	return &%MODULE_NAME%{api}
+}
 

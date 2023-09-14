@@ -1,101 +1,105 @@
 #!/bin/python3
 from __future__ import annotations
 
+import sys
+
 import requests
 import json
 
+
 type_dict = {
-    "InstanceDatastore": "Any",
-    "ActionResult": "Any",
-    "Int32": "int",
-    "IEnumerable<InstanceDatastore>": "list",
-    "RunningTask": "Any",
-    "IEnumerable<JObject>": "list[dict]",
-    "Guid": "str", # UUID
-    "Task<RunningTask>": "Any",
-    "IEnumerable<DeploymentTemplate>": "list",
-    "String": "str",
-    "DeploymentTemplate": "Any",
+    "InstanceDatastore": "ampapi.InstanceDatastore",
+    "ActionResult": "ampapi.ActionResult[any]",
+    "Int32": "int32",
+    "IEnumerable<InstanceDatastore>": "ampapi.Result[[]ampapi.InstanceDatastore]",
+    "RunningTask": "ampapi.Result[ampapi.RunningTask]",
+    "Task<RunningTask>": "ampapi.Task[ampapi.RunningTask]",
+    "IEnumerable<JObject>": "ampapi.Result[map[string]any]",
+    "Guid": "ampapi.UUID",
+    "IEnumerable<DeploymentTemplate>": "ampapi.Result[[]any]",
+    "String": "string",
+    "DeploymentTemplate": "any",
     "Boolean": "bool",
-    "List<String>": "list[str]",
-    "PostCreateActions": "Any",
-    "Dictionary<String, String>": "dict[str, str]",
-    "RemoteTargetInfo": "Any",
-    "IEnumerable<ApplicationSpec>": "list",
-    "Void": "None",
-    "IEnumerable<EndpointInfo>": "list",
-    "IEnumerable<IADSInstance>": "list",
-    "JObject": "dict",
-    "PortProtocol": "str",
-    "Task<ActionResult>": "Any",
-    "ActionResult<String>": "Any",
-    "IADSInstance": "bool",
-    "Uri": "str",
-    "IEnumerable<PortUsage>": "list",
-    "Dictionary<String, Int32>": "dict[str, int]",
-    "LocalAMPInstance": "Any",
-    "ContainerMemoryPolicy": "Any",
-    "Single": "Any",
-    "Task<JObject>": "Any",
-    "Int64": "int",
-    "FileChunkData": "Any",
-    "IEnumerable<BackupManifest>": "list[dict]",
-    "Nullable<DateTime>": "Any",
-    "IEnumerable<IAuditLogEntry>": "dict",
-    "Dictionary<String, IEnumerable<JObject>>": "dict[str, list[dict]]",
-    "IDictionary<String, String>": "dict[str, str]",
-    "List<JObject>": "list[dict]",
-    "String[]": "list[str]",
-    "Task<IEnumerable<AuthRoleSummary>>": "Any",
-    "Task<IDictionary<Guid, String>>": "Any",
-    "Task<AuthRoleSummary>": "Any",
-    "Task<ActionResult<Guid>>": "Any",
-    "Nullable<Boolean>": "bool | None",
-    "Task<IEnumerable<String>>": "Any",
-    "ScheduleInfo": "Any",
-    "Int32[]": "list[int]",
-    "TimeIntervalTrigger": "Any",
-    "IEnumerable<WebSessionSummary>": "list",
-    "Task<IEnumerable<UserInfoSummary>>": "Any",
-    "Task<UserInfo>": "Any",
-    "Task<IEnumerable<UserInfo>>": "Any",
-    "IList<IPermissionsTreeNode>": "list",
-    "WebauthnLoginInfo": "Any",
-    "IEnumerable<WebauthnCredentialSummary>": "list",
-    "Task<ActionResult<TwoFactorSetupInfo>>": "Any",
-    "IEnumerable<RunningTask>": "Any", "ModuleInfo": "Any",
-    "Dictionary<String, Dictionary<String, MethodInfoSummary>>": "dict[str, dict]",
-    "Object": "Any",
-    "Task<String>": "Any",
-    "UpdateInfo": "Any",
-    "IEnumerable<ListeningPortSummary>": "list",
+    "List<String>": "[]string",
+    "PostCreateActions": "any",
+    "Dictionary<String, String>": "map[string]string",
+    "RemoteTargetInfo": "ampapi.RemoteTargetInfo",
+    "IEnumerable<ApplicationSpec>": "ampapi.Result[[]any]",
+    "Void": "any",
+    "IEnumerable<EndpointInfo>": "ampapi.Result[[]ampapi.EndpointInfo]",
+    "IEnumerable<IADSInstance>": "ampapi.Result[[]ampapi.IADSInstance]",
+    "JObject": "map[string]any",
+    "PortProtocol": "any",
+    "ActionResult<String>": "ampapi.ActionResult[string]",
+    "IADSInstance": "ampapi.Result[ampapi.IADSInstance]",
+    "Uri": "ampapi.URL",
+    "IEnumerable<PortUsage>": "ampapi.Result[[]any]",
+    "Dictionary<String, Int32>": "map[string]int",
+    "LocalAMPInstance": "any",
+    "ContainerMemoryPolicy": "any",
+    "Single": "any",
+    "Int64": "int64",
+    "FileChunkData": "any",
+    "IEnumerable<BackupManifest>": "ampapi.Result[[]any]",
+    "Nullable<DateTime>": "any", # Optional?
+    "IEnumerable<IAuditLogEntry>": "ampapi.Result[[]any]",
+    "Dictionary<String, IEnumerable<JObject>>": "ampapi.Result[map[string][]map[string]any]", 
+    "IDictionary<String, String>": "map[string]string",
+    "List<JObject>": "[]map[string]any",
+    "String[]": "[]string",
+    "Nullable<Boolean>": "bool", # Optional?
+    "ScheduleInfo": "any",
+    "Int32[]": "[]int32",
+    "TimeIntervalTrigger": "any",
+    "IEnumerable<WebSessionSummary>": "ampapi.Result[[]any]",
+    "IList<IPermissionsTreeNode>": "[]any",
+    "WebauthnLoginInfo": "any",
+    "IEnumerable<WebauthnCredentialSummary>": "ampapi.Result[[]any]",
+    "IEnumerable<RunningTask>": "ampapi.Result[[]ampapi.RunningTask]",
+    "ModuleInfo": "ampapi.Result[ampapi.ModuleInfo]",
+    "Dictionary<String, Dictionary<String, MethodInfoSummary>>": "map[string]map[string]any",
+    "Object": "any",
+    "UpdateInfo": "ampapi.Result[ampapi.UpdateInfo]",
+    "IEnumerable<ListeningPortSummary>": "ampapi.Result[[]any]",
+    "Task<JObject>": "ampapi.Task[map[string]any]",
+    "Task<ActionResult<TwoFactorSetupInfo>>": "ampapi.Task[any]",
+    "Task<IEnumerable<String>>": "ampapi.Task[[]string]",
+    "Task<UserInfo>": "ampapi.Task[ampapi.UserInfo]",
+    "Task<IEnumerable<UserInfoSummary>>": "ampapi.Task[[]any]",
+    "Task<IEnumerable<UserInfo>>": "ampapi.Task[[]ampapi.UserInfo]",
+    "Task<String>": "ampapi.Task[string]",
+    "Task<AuthRoleSummary>": "ampapi.Task[any]",
+    "Task<IEnumerable<AuthRoleSummary>>": "ampapi.Task[[]any]",
+    "Task<IDictionary<Guid, String>>": "ampapi.Task[map[ampapi.UUID]any]",
+    "Task<ActionResult>": "ampapi.Task[ampapi.ActionResult[any]]",
+    "Task<ActionResult<Guid>>": "ampapi.Task[ampapi.ActionResult[ampapi.UUID]]",
 
     ## Custom types
-    # "Result<Instance>": "Result<Instance>",
-    # "Result<RemoteTargetInfo>": "Result<RemoteTargetInfo>",
-    # "SettingsSpec": "SettingsSpec",
-    # "Status": "Status",
-    # "Updates": "Updates",
-    # "Result<Map<String, String>>": "Result<Map<String, String>>",
-    # "LoginResult": "LoginResult"
+    "ampapi.Result[ampapi.Instance]": "ampapi.Result[ampapi.Instance]",
+    "ampapi.Result[ampapi.RemoteTargetInfo]": "ampapi.Result[ampapi.RemoteTargetInfo]",
+    "ampapi.SettingsSpec": "ampapi.SettingsSpec",
+    "ampapi.Status": "ampapi.Status",
+    "ampapi.Updates": "ampapi.Updates",
+    "ampapi.Result[map[string]string]": "ampapi.Result[map[string]string]",
+    "ampapi.LoginResult": "ampapi.LoginResult"
 }
 
 custom_types = {
-    # # API.ADSModule.GetInstance
-    # "ADSModule.GetInstance": "Result<Instance>",
-    # # API.ADSModule.GetTargetInfo
-    # "ADSModule.GetTargetInfo": "Result<RemoteTargetInfo>",
+    # API.ADSModule.GetInstance
+    "ADSModule.GetInstance": "ampapi.Result[ampapi.Instance]",
+    # API.ADSModule.GetTargetInfo
+    "ADSModule.GetTargetInfo": "ampapi.Result[ampapi.RemoteTargetInfo]",
 
-    # # API.Core.GetSettingsSpec
-    # "Core.GetSettingsSpec": "SettingsSpec",
-    # # API.Core.GetStatus
-    # "Core.GetStatus": "Status",
-    # # API.Core.GetUpdates
-    # "Core.GetUpdates": "Updates",
-    # # API.Core.GetUserList
-    # "Core.GetUserList": "Result<Map<String, String>>",
-    # # API.Core.Login
-    # "Core.Login": "LoginResult",
+    # API.Core.GetSettingsSpec
+    "Core.GetSettingsSpec": "ampapi.SettingsSpec",
+    # API.Core.GetStatus
+    "Core.GetStatus": "ampapi.Status",
+    # API.Core.GetUpdates
+    "Core.GetUpdates": "ampapi.Updates",
+    # API.Core.GetUserList
+    "Core.GetUserList": "ampapi.Result[map[string]string]",
+    # API.Core.Login
+    "Core.Login": "ampapi.LoginResult",
 }
 
 def generate_apimodule_method(module: str, method: str, method_spec: dict):
@@ -155,7 +159,7 @@ def generate_apimodule_method(module: str, method: str, method_spec: dict):
 
         # Print out the type if it hasn't been added to the type_dict
         if not type_name in type_dict.keys(): print(type_name)
-        parameters += f"{name}: {type_dict[type_name]}, "
+        parameters += f"{name} {type_dict[type_name]}, "
 
     parameters = parameters[:-2]
 
@@ -194,7 +198,7 @@ def generate_apimodule(module: str, methods: dict):
         tf.close()
 
     # Create a new file called f{module}.java
-    f = open(f"../ampapi/apimodules/{module}.py","w+")
+    f = open(f"../ampapi/apimodules/{module}.go","w+")
     f.write(api_module_template.replace("%MODULE_NAME%", module))
 
     for method in methods.keys():
@@ -205,7 +209,13 @@ def generate_apimodule(module: str, methods: dict):
 def generate_spec(spec: dict):
     for module in spec.keys():
         if module == "CommonCorePlugin": continue
-        generate_apimodule(module, spec[module])
+        
+        # Special case for Golang, make sure the first letter is capitalized
+        methods = spec[module]
+        if module[0].islower():
+            module = module[0].upper() + module[1:]
+
+        generate_apimodule(module, methods)
 
 def load_custom_types(spec: dict):
     for type_index in custom_types.keys():
@@ -224,5 +234,3 @@ if __name__ == "__main__":
     load_custom_types(spec)
 
     generate_spec(spec)
-
-    

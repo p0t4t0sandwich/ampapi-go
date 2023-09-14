@@ -90,7 +90,7 @@ type IADSInstance struct {
 // Instance - An instance object
 // Author: p0t4t0sandwich
 type Instance struct {
-	Id                    UUID              `json:"Id"`                    // The instance ID
+	InstanceID            UUID              `json:"InstanceID"`            // The instance ID
 	TargetID              UUID              `json:"TargetID"`              // The target ID
 	InstanceName          string            `json:"InstanceName"`          // The instance name
 	FriendlyName          string            `json:"FriendlyName"`          // The friendly name
@@ -134,7 +134,7 @@ type LoginResult struct {
 	SessionId       string   `json:"sessionID"`
 	RememberMeToken string   `json:"rememberMeToken"`
 	UserInfo        UserInfo `json:"userInfo"`
-	Result          float32  `json:"result"`
+	Result          float64  `json:"result"`
 }
 
 // Message - Message type for API.Core.GetUpdates status messages (along with WS keep alive)
@@ -152,7 +152,7 @@ type Message struct {
 type Metric struct {
 	RawValue int     `json:"RawValue"` // The raw value
 	MaxValue int     `json:"MaxValue"` // The maximum value
-	Percent  float32 `json:"Percent"`  // The percentage
+	Percent  float64 `json:"Percent"`  // The percentage
 	Units    string  `json:"Units"`    // The units
 	Color    string  `json:"Color"`    // The color
 	Color2   string  `json:"Color2"`   // The second color
@@ -226,7 +226,7 @@ type RunningTask struct {
 	HideFromUI       bool    `json:"HideFromUI"`       // Whether the task is hidden from the UI
 	FastDismiss      bool    `json:"FastDismiss"`      // Whether the task can be dismissed quickly
 	LastUpdatePushed string  `json:"LastUpdatePushed"` // The last update pushed
-	ProgressPercent  float32 `json:"ProgressPercent"`  // The progress percentage
+	ProgressPercent  float64 `json:"ProgressPercent"`  // The progress percentage
 	IsCancellable    bool    `json:"IsCancellable"`    // Whether the task is cancellable
 	Origin           string  `json:"Origin"`           // The origin
 	IsIndeterminate  bool    `json:"IsIndeterminate"`  // Whether the task is indeterminate
@@ -378,4 +378,9 @@ type URL string
 
 // UUID - A UUID is a string that represents a UUID
 // Author: p0t4t0sandwich
-type UUID [16]byte
+type UUID string
+
+// String - Returns the string representation of the UUID
+func (u UUID) String() string {
+	return string(u)
+}

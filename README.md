@@ -19,111 +19,102 @@ go get github.com/p0t4t0sandwich/ampapi-go
 
 ### CommonAPI Example
 
-```python
-from ampapi.modules.CommonAPI import CommonAPI
+```go
+package main
 
-def main():
-    # If you know the module that the instance is using, specify it instead of CommonAPI
-    API = CommonAPI("http://localhost:8080/", "admin", "myfancypassword123", "")
-    API.Login()
+import (
+    "ampapi/ampapi/modules"
+)
 
-    # API call parameters are simply in the same order as shown in the documentation.
-    API.Core.SendConsoleMessage("say Hello Everyone, this message was sent from the Python API!")
+func main() {
+    // If you know the module that the instance is using, specify it instead of CommonAPI
+    API := modules.NewCommonAPI("http://localhost:8080/", "admin", "myfancypassword123")
 
-    currentStatus = API.Core.GetStatus()
-    CPUUsagePercent = currentStatus["Metrics"]["CPU Usage"]["Percent"]
+    // API call parameters are simply in the same order as shown in the documentation.
+    API.Core.SendConsoleMessage("say Hello Everyone, this message was sent from the Go API!")
 
-    print("Current CPU usage is: " + str(CPUUsagePercent) + "%")
+    currentStatus := API.Core.GetStatus()
+    CPUUsagePercent := currentStatus.Metrics["CPU Usage"].Percent
 
-main()
-```
-
-### Async CommonAPI Example
-
-```python
-import asyncio
-from ampapi.modules.CommonAPI import CommonAPI
-
-async def main():
-    # If you know the module that the instance is using, specify it instead of CommonAPI
-    API = CommonAPI("http://localhost:8080/", "admin", "myfancypassword123", "")
-    await API.LoginAsync()
-
-    # API call parameters are simply in the same order as shown in the documentation.
-    await API.Core.SendConsoleMessageAsync("say Hello Everyone, this message was sent from the Python API!")
-
-    currentStatus = await API.Core.GetStatusAsync()
-    CPUUsagePercent = currentStatus["Metrics"]["CPU Usage"]["Percent"]
-
-    print("Current CPU usage is: " + str(CPUUsagePercent) + "%")
-
-asyncio.run(main())
+    fmt.Printf("Current CPU usage is: %v%%\n", CPUUsagePercent)
+}
 ```
 
 ### Example using the ADS to manage an instance
 
-```python
-from ampapi.modules.ADS import ADS
-from ampapi.modules.Minecraft import Minecraft
+```go
+package main
 
-API = ADS("http://localhost:8080/", "admin", "myfancypassword123")
+import (
+    "ampapi/ampapi"
+    "ampapi/ampapi/modules"
+    "strconv"
+)
 
-# Get the available instances
-instancesResult = API.ADSModule.GetInstances()
+func main() {
+    API := modules.NewADS("http://localhost:8080/", "admin", "myfancypassword123")
 
-targets = instancesResult["result"]
+    // Get the available instances
+    instancesResult := API.ADSModule.GetInstances()
 
-# In this example, my Hub server is on the second target
-# If you're running a standalone setup, you can just use targets[1]
-target = targets[1]
+    targets := instancesResult.Result
 
-hub_instance_id = ""
+    // In this example, my Hub server is on the second target
+    // If you're running a standalone setup, you can just use targets[1]
+    target := targets[1]
 
-# Get the available instances
-instances = target["AvailableInstances"]
-for instance in instances:
-    # Find the instance named "Hub"
-    if instance["InstanceName"] == "Hub":
-        hub_instance_id = instance["InstanceID"]
-        break
+    var hub_instance_id ampapi.UUID
 
-# Use the instance ID to get the API for the instance
-Hub = API.InstanceLogin(hub_instance_id, Minecraft)
+    // Get the instance ID of the Hub server
+    for _, instance := range target.AvailableInstances {
+        if instance.InstanceName == "Hub" {
+            hub_instance_id = instance.InstanceID
+            break
+        }
+    }
 
-# Get the current CPU usage
-currentStatus = Hub.Core.GetStatus()
-CPUUsagePercent = currentStatus["Metrics"]["CPU Usage"]["Percent"]
+    // Use the instance ID to get the API for the instance
+    Hub, ok := API.InstanceLogin(hub_instance_id, "Minecraft").(*modules.Minecraft)
+    if !ok {
+        panic("Failed to login to instance")
+    }
 
-# Send a message to the console
-Hub.Core.SendConsoleMessage("say Current CPU usage is: " + CPUUsagePercent + "%")
+    // Get the current CPU usage
+    currentStatus := Hub.Core.GetStatus()
+    CPUUsagePercent := currentStatus.Metrics["CPU Usage"].Percent
+
+    // Send a message to the console
+    Hub.Core.SendConsoleMessage("say Current CPU usage is: " + strconv.FormatFloat(CPUUsagePercent, 'f', 2, 64) + "%")
+}
 ```
 
 ### CommonAPI Example, handling the sessionId and rememberMeToken manually (not recommended)
 
-```python
-from ampapi.ampapi import AMPAPI
+```go
+package main
 
-try:
-    API = AMPAPI("http://localhost:8080/")
+import (
+    "ampapi/ampapi/modules"
+)
 
-    # The third parameter is either used for 2FA logins, or if no password is specified to use a remembered token from a previous login, or a service login token.
-    loginResult = API.Core.Login("admin", "myfancypassword123", "", False)
+func main() {
+    API := modules.NewCommonAPI("http://localhost:8080/")
 
-    if "success" in loginResult.keys() and loginResult["success"]:
-        print("Login successful")
-        API.sessionId = loginResult["sessionID"]
+    // The third parameter is either used for 2FA logins, or if no password is specified to use a remembered token from a previous login, or a service login token.
+    loginResult := API.Core.Login("admin", "myfancypassword123", "", false)
 
-        # API call parameters are simply in the same order as shown in the documentation.
-        API.Core.SendConsoleMessage("say Hello Everyone, this message was sent from the Python API!")
-        currentStatus = API.Core.GetStatus()
-        CPUUsagePercent = currentStatus["Metrics"]["CPU Usage"]["Percent"]
-        print(f"Current CPU usage is: {CPUUsagePercent}%")
+    if loginResult.Success {
+        fmt.Println("Login successful!")
+        API.AMPAPI.SessionId = loginResult.SessionId
 
-    else:
-        print("Login failed")
-        print(loginResult)
-
-except Exception as err:
-    # In reality, you'd handle this exception better
-    raise Exception(err)
+        // API call parameters are simply in the same order as shown in the documentation.
+        API.Core.SendConsoleMessage("say Hello Everyone, this message was sent from the Go API!")
+        currentStatus := API.Core.GetStatus()
+        CPUUsagePercent := currentStatus.Metrics["CPU Usage"].Percent
+        fmt.Printf("Current CPU usage is: %v%%\n", CPUUsagePercent)
+    } else {
+        fmt.Println("Login failed!")
+        fmt.Println(loginResult)
+    }
+}
 ```
