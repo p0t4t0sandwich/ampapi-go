@@ -44,6 +44,10 @@ func (ads *ADS) Login() ampapi.LoginResult {
 	return loginResult
 }
 
+// ADS.InstanceLogin - Function to proxy a login to an instance
+// instanceId: The instance ID to login to
+// module: The module to login to
+// Returns: The module object
 func (ads *ADS) InstanceLogin(instanceId ampapi.UUID, module string) interface{} {
 	var args = make(map[string]any)
 	args["username"] = ads.Username

@@ -129,12 +129,12 @@ type InstanceDatastore struct {
 // LoginResult - Response type for API.Core.Login
 // Author: p0t4t0sandwich
 type LoginResult struct {
-	Success         bool     `json:"success"`
-	Permissions     []string `json:"permissions"`
-	SessionId       string   `json:"sessionID"`
-	RememberMeToken string   `json:"rememberMeToken"`
-	UserInfo        UserInfo `json:"userInfo"`
-	Result          float64  `json:"result"`
+	Success         bool     `json:"success"`         // Whether the login was successful
+	Permissions     []string `json:"permissions"`     // The user's permissions
+	SessionId       string   `json:"sessionID"`       // The session ID
+	RememberMeToken string   `json:"rememberMeToken"` // The remember me token
+	UserInfo        UserInfo `json:"userInfo"`        // The user information
+	Result          float64  `json:"result"`          // The result
 }
 
 // Message - Message type for API.Core.GetUpdates status messages (along with WS keep alive)
@@ -318,6 +318,7 @@ var (
 )
 
 // String - Returns the string representation of the state
+// Author: p0t4t0sandwich
 func (s State) String() string {
 	if val, ok := StateMapReverse[int(s)]; ok {
 		return val
@@ -363,13 +364,13 @@ type Updates struct {
 // UserInfo - Information about the user
 // Author: p0t4t0sandwich
 type UserInfo struct {
-	ID                 UUID   `json:"ID"`
-	Username           string `json:"Username"`
-	IsTwoFactorEnabled bool   `json:"IsTwoFactorEnabled"`
-	Disabled           bool   `json:"Disabled"`
-	LastLogin          string `json:"LastLogin"`
-	GravatarHash       string `json:"GravatarHash"`
-	IsLDAPUser         bool   `json:"IsLDAPUser"`
+	ID                 UUID   `json:"ID"`                 // The user ID
+	Username           string `json:"Username"`           // The username
+	IsTwoFactorEnabled bool   `json:"IsTwoFactorEnabled"` // Wether 2FA is enabled
+	Disabled           bool   `json:"Disabled"`           // Whether the user is disabled
+	LastLogin          string `json:"LastLogin"`          // The last login
+	GravatarHash       string `json:"GravatarHash"`       // The Gravatar hash
+	IsLDAPUser         bool   `json:"IsLDAPUser"`         // Whether the user is an LDAP user
 }
 
 // URL - A URL is a string that represents a URL

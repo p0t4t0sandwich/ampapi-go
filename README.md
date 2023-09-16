@@ -1,5 +1,15 @@
 # ampapi-go
 
+[![License](https://img.shields.io/github/license/p0t4t0sandwich/ampapi-go?color=blue)](https://img.shields.io/github/downloads/p0t4t0sandwich/ampapi-go/LICENSE)
+[![Github](https://img.shields.io/github/stars/p0t4t0sandwich/ampapi-go)](https://github.com/p0t4t0sandwich/ampapi-go)
+[![Github Issues](https://img.shields.io/github/issues/p0t4t0sandwich/ampapi-go?label=Issues)](https://github.com/p0t4t0sandwich/ampapi-go/issues)
+[![Discord](https://img.shields.io/discord/1067482396246683708?color=7289da&logo=discord&logoColor=white)](https://discord.neuralnexus.dev)
+[![wakatime](https://wakatime.com/badge/github/p0t4t0sandwich/ampapi-go.svg)](https://wakatime.com/badge/github/p0t4t0sandwich/ampapi-go)
+
+[![Github Releases](https://img.shields.io/github/downloads/p0t4t0sandwich/ampapi-go/total?label=Github&logo=github&color=181717)](https://github.com/p0t4t0sandwich/ampapi-go/releases)
+[![Go Reference](https://pkg.go.dev/badge/github.com/p0t4t0sandwich/ampapi-go.svg)](https://pkg.go.dev/github.com/p0t4t0sandwich/ampapi-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/p0t4t0sandwich/ampapi-go)](https://goreportcard.com/report/github.com/p0t4t0sandwich/ampapi-go)
+
 An API that allows you to communicate with AMP installations from within Go.
 
 Documentation for available API calls can be found by appending /API to the URL of any existing AMP installation.
