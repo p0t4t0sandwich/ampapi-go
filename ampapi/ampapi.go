@@ -10,6 +10,13 @@ import (
 	"time"
 )
 
+// Package metadata
+const (
+	Author  = "Dylan Sperrer"
+	Email   = "dylan@neuralnexus.dev"
+	Version = "1.0.1"
+)
+
 // AMPAPI struct
 type AMPAPI struct {
 	BaseURI         string
