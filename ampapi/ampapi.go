@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"time"
 )
 
 // AMPAPI struct
@@ -17,6 +18,9 @@ type AMPAPI struct {
 	Password        string
 	RememberMeToken string
 	SessionId       string
+	RequestMethod   string
+	lastAPICall     int64
+	RelogInterval   int64
 }
 
 // NewAMPAPI creates a new AMPAPI object
@@ -50,28 +54,36 @@ func NewAMPAPI(baseUri string, optional ...string) *AMPAPI {
 		ampapi.SessionId = ""
 	}
 
+	ampapi.RequestMethod = "POST"
+	ampapi.lastAPICall = time.Now().UnixMilli()
+	ampapi.RelogInterval = 1000 * 60 * 5
+
 	return ampapi
 }
 
-// Var for the request method
-var RequestMethod = "POST"
-
 // apiCall is a function that takes an endpoint and returns the response
 func (ampapi *AMPAPI) ApiCall(endpoint string, args map[string]any) []byte {
+	// Check the last API call time, and if it's been more than the relog interval, relog.
+	if time.Now().UnixMilli()-ampapi.lastAPICall > ampapi.RelogInterval {
+		ampapi.lastAPICall = time.Now().UnixMilli()
+		ampapi.Login()
+	} else {
+		ampapi.lastAPICall = time.Now().UnixMilli()
+	}
 	args["SESSIONID"] = ampapi.SessionId
 
 	body := new(bytes.Buffer)
 	json.NewEncoder(body).Encode(args)
 
 	client := &http.Client{}
-	req, err := http.NewRequest(RequestMethod, ampapi.DataSource+endpoint, body)
+	req, err := http.NewRequest(ampapi.RequestMethod, ampapi.DataSource+endpoint, body)
 	if err != nil {
 		fmt.Print(err.Error())
 		os.Exit(1)
 	}
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("User-Agent", "ampapi-go/1.0.0")
+	req.Header.Add("User-Agent", "ampapi-go/1.0.1")
 	resp, err := client.Do(req)
 
 	if err != nil {
@@ -92,9 +104,14 @@ func (ampapi *AMPAPI) ApiCall(endpoint string, args map[string]any) []byte {
 func (ampapi *AMPAPI) Login() LoginResult {
 	var args = make(map[string]any)
 	args["username"] = ampapi.Username
-	args["password"] = ampapi.Password
+	args["password"] = ""
 	args["token"] = ampapi.RememberMeToken
 	args["rememberMe"] = true
+
+	// If remember me token is empty, use the password.
+	if ampapi.RememberMeToken != "" {
+		args["password"] = ampapi.Password
+	}
 
 	var loginResult LoginResult
 	json.Unmarshal(ampapi.ApiCall("Core/Login", args), &loginResult)
