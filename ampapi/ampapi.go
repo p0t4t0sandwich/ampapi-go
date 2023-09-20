@@ -71,11 +71,12 @@ func NewAMPAPI(baseUri string, optional ...string) *AMPAPI {
 // apiCall is a function that takes an endpoint and returns the response
 func (ampapi *AMPAPI) ApiCall(endpoint string, args map[string]any) []byte {
 	// Check the last API call time, and if it's been more than the relog interval, relog.
-	if time.Now().UnixMilli()-ampapi.lastAPICall > ampapi.RelogInterval {
-		ampapi.lastAPICall = time.Now().UnixMilli()
+	var now int64 = time.Now().UnixMilli()
+	if now-ampapi.lastAPICall > ampapi.RelogInterval {
+		ampapi.lastAPICall = now
 		ampapi.Login()
 	} else {
-		ampapi.lastAPICall = time.Now().UnixMilli()
+		ampapi.lastAPICall = now
 	}
 	args["SESSIONID"] = ampapi.SessionId
 

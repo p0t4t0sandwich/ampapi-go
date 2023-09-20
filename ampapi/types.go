@@ -74,9 +74,10 @@ type IADSInstance struct {
 	Id                  int                 `json:"Id"`                  // The ADS instance ID
 	InstanceId          UUID                `json:"InstanceId"`          // The instance ID
 	FriendlyName        string              `json:"FriendlyName"`        // The friendly name
+	Description         string              `json:"Description"`         // The description
 	Disabled            bool                `json:"Disabled"`            // Whether the instance is disabled
 	IsRemote            bool                `json:"isRemote"`            // Whether the instance is remote
-	PlatformInfo        PlatformInfo        `json:"PlatformInfo"`        // The platform information object
+	Platform            PlatformInfo        `json:"Platform"`            // The platform information object
 	Datastores          []InstanceDatastore `json:"Datastores"`          // The datastores
 	CreatesInContainers bool                `json:"CreatesInContainers"` // Whether the instance creates in containers
 	State               State               `json:"State"`               // The state
@@ -85,6 +86,9 @@ type IADSInstance struct {
 	LastUpdated         string              `json:"LastUpdated"`         // The last updated
 	AvailableInstances  []Instance          `json:"AvailableInstances"`  // The available instances
 	AvailableIPs        []string            `json:"AvailableIPs"`        // The available IPs
+	URL                 string              `json:"URL"`                 // The URL
+	Tags                []string            `json:"Tags"`                // The tags
+	TagNames            []string            `json:"TagNames"`            // The tag names
 }
 
 // Instance - An instance object
@@ -94,7 +98,9 @@ type Instance struct {
 	TargetID              UUID              `json:"TargetID"`              // The target ID
 	InstanceName          string            `json:"InstanceName"`          // The instance name
 	FriendlyName          string            `json:"FriendlyName"`          // The friendly name
+	Description           string            `json:"Description"`           // The description
 	Module                string            `json:"Module"`                // The module
+	ModuleDisplayName     string            `json:"ModuleDisplayName"`     // The module display name
 	AMPVersion            AMPVersion        `json:"AMPVersion"`            // The AMP version
 	IsHTTPS               bool              `json:"IsHTTPS"`               // Whether HTTPS is enabled
 	IP                    string            `json:"IP"`                    // The IP address
@@ -113,6 +119,7 @@ type Instance struct {
 	ContainerMemoryMB     int               `json:"ContainerMemoryMB"`     // The container memory in MB
 	ContainerMemoryPolicy string            `json:"ContainerMemoryPolicy"` // The container memory policy
 	ContainerCPUs         int               `json:"ContainerCPUs"`         // The container CPUs
+	SpecificDockerImage   string            `json:"SpecificDockerImage"`   // The specific Docker image
 	Metrics               map[string]Metric `json:"Metrics"`               // The metrics
 	ApplicationEndpoints  []EndpointInfo    `json:"ApplicationEndpoints"`  // The application endpoints
 	DeploymentArgs        map[string]string `json:"DeploymentArgs"`        // The deployment arguments
@@ -194,7 +201,7 @@ type ModuleInfo struct {
 type PlatformInfo struct {
 	CPUInfo        CPUInfo `json:"CPUInfo"`        // The CPU information object
 	InstalledRAMMB int     `json:"InstalledRAMMB"` // The installed RAM in MB
-	OS             string  `json:"OS"`             // The OS
+	OS             int     `json:"OS"`             // The OS
 	PlatformName   string  `json:"PlatformName"`   // The platform name
 	SystemType     int     `json:"SystemType"`     // The system type
 	Virtualization int     `json:"Virtualization"` // The virtualization
@@ -366,6 +373,7 @@ type Updates struct {
 type UserInfo struct {
 	ID                 UUID   `json:"ID"`                 // The user ID
 	Username           string `json:"Username"`           // The username
+	EmailAddress       string `json:"EmailAddress"`       // The email address
 	IsTwoFactorEnabled bool   `json:"IsTwoFactorEnabled"` // Wether 2FA is enabled
 	Disabled           bool   `json:"Disabled"`           // Whether the user is disabled
 	LastLogin          string `json:"LastLogin"`          // The last login
