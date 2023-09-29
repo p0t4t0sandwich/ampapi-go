@@ -4,13 +4,13 @@ package apimodules
 // Author: p0t4t0sandich
 
 import (
-	"ampapi/ampapi"
+	"ampapi-go"
 	"encoding/json"
 )
 
 // struct Steamcmdplugin
 type Steamcmdplugin struct {
-    *ampapi.AMPAPI
+	*ampapi.AMPAPI
 }
 
 // Function NewSteamcmdplugin
@@ -19,42 +19,41 @@ func NewSteamcmdplugin(api *ampapi.AMPAPI) *Steamcmdplugin {
 	return &Steamcmdplugin{api}
 }
 
-/* CancelSteamGuard - 
+/* CancelSteamGuard -
  * Name Description Optional
  * return any
  */
 func (a *Steamcmdplugin) CancelSteamGuard() any {
-    var args = make(map[string]any)
-    var res any
-    json.Unmarshal(a.ApiCall("Steamcmdplugin/CancelSteamGuard", args), &res)
-    return res
+	var args = make(map[string]any)
+	var res any
+	json.Unmarshal(a.ApiCall("Steamcmdplugin/CancelSteamGuard", args), &res)
+	return res
 }
 
-/* SteamGuardCode - 
+/* SteamGuardCode -
  * Name Description Optional
  * param code string  False
  * return any
  */
 func (a *Steamcmdplugin) SteamGuardCode(code string) any {
-    var args = make(map[string]any)
-    args["code"] = code
-    var res any
-    json.Unmarshal(a.ApiCall("Steamcmdplugin/SteamGuardCode", args), &res)
-    return res
+	var args = make(map[string]any)
+	args["code"] = code
+	var res any
+	json.Unmarshal(a.ApiCall("Steamcmdplugin/SteamGuardCode", args), &res)
+	return res
 }
 
-/* SteamUsernamePassword - 
+/* SteamUsernamePassword -
  * Name Description Optional
  * param username string  False
  * param password string  False
  * return any
  */
 func (a *Steamcmdplugin) SteamUsernamePassword(username string, password string) any {
-    var args = make(map[string]any)
-    args["username"] = username
-    args["password"] = password
-    var res any
-    json.Unmarshal(a.ApiCall("Steamcmdplugin/SteamUsernamePassword", args), &res)
-    return res
+	var args = make(map[string]any)
+	args["username"] = username
+	args["password"] = password
+	var res any
+	json.Unmarshal(a.ApiCall("Steamcmdplugin/SteamUsernamePassword", args), &res)
+	return res
 }
-

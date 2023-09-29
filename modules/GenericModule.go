@@ -1,8 +1,8 @@
 package modules
 
 import (
-	"ampapi/ampapi"
-	"ampapi/ampapi/apimodules"
+	"ampapi-go"
+	"ampapi-go/apimodules"
 )
 
 // Struct GenericModule

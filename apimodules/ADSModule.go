@@ -4,7 +4,7 @@ package apimodules
 // Author: p0t4t0sandich
 
 import (
-	"ampapi/ampapi"
+	"ampapi-go"
 	"encoding/json"
 )
 

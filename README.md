@@ -33,7 +33,8 @@ go get github.com/p0t4t0sandwich/ampapi-go
 package main
 
 import (
-    "ampapi/ampapi/modules"
+    "ampapi-go"
+    "ampapi-go/modules"
 )
 
 func main() {
@@ -43,7 +44,7 @@ func main() {
     // API call parameters are simply in the same order as shown in the documentation.
     API.Core.SendConsoleMessage("say Hello Everyone, this message was sent from the Go API!")
 
-    currentStatus := API.Core.GetStatus()
+    var currentStatus ampapi.Status = API.Core.GetStatus()
     CPUUsagePercent := currentStatus.Metrics["CPU Usage"].Percent
 
     fmt.Printf("Current CPU usage is: %v%%\n", CPUUsagePercent)
@@ -56,8 +57,8 @@ func main() {
 package main
 
 import (
-    "ampapi/ampapi"
-    "ampapi/ampapi/modules"
+    "ampapi-go"
+    "ampapi-go/modules"
     "strconv"
 )
 
@@ -90,7 +91,7 @@ func main() {
     }
 
     // Get the current CPU usage
-    currentStatus := Hub.Core.GetStatus()
+    var currentStatus ampapi.Status = Hub.Core.GetStatus()
     CPUUsagePercent := currentStatus.Metrics["CPU Usage"].Percent
 
     // Send a message to the console
@@ -104,7 +105,8 @@ func main() {
 package main
 
 import (
-    "ampapi/ampapi/modules"
+    "ampapi-go"
+    "ampapi-go/modules"
 )
 
 func main() {
@@ -119,7 +121,7 @@ func main() {
 
         // API call parameters are simply in the same order as shown in the documentation.
         API.Core.SendConsoleMessage("say Hello Everyone, this message was sent from the Go API!")
-        currentStatus := API.Core.GetStatus()
+        var currentStatus ampapi.Status = API.Core.GetStatus()
         CPUUsagePercent := currentStatus.Metrics["CPU Usage"].Percent
         fmt.Printf("Current CPU usage is: %v%%\n", CPUUsagePercent)
     } else {

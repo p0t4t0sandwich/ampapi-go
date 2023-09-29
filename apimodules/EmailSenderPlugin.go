@@ -4,13 +4,13 @@ package apimodules
 // Author: p0t4t0sandich
 
 import (
-	"ampapi/ampapi"
+	"ampapi-go"
 	"encoding/json"
 )
 
 // struct EmailSenderPlugin
 type EmailSenderPlugin struct {
-    *ampapi.AMPAPI
+	*ampapi.AMPAPI
 }
 
 // Function NewEmailSenderPlugin
@@ -19,14 +19,13 @@ func NewEmailSenderPlugin(api *ampapi.AMPAPI) *EmailSenderPlugin {
 	return &EmailSenderPlugin{api}
 }
 
-/* TestSMTPSettings - 
+/* TestSMTPSettings -
  * Name Description Optional
  * return ampapi.Task[ampapi.ActionResult[any]]
  */
 func (a *EmailSenderPlugin) TestSMTPSettings() ampapi.Task[ampapi.ActionResult[any]] {
-    var args = make(map[string]any)
-    var res ampapi.Task[ampapi.ActionResult[any]]
-    json.Unmarshal(a.ApiCall("EmailSenderPlugin/TestSMTPSettings", args), &res)
-    return res
+	var args = make(map[string]any)
+	var res ampapi.Task[ampapi.ActionResult[any]]
+	json.Unmarshal(a.ApiCall("EmailSenderPlugin/TestSMTPSettings", args), &res)
+	return res
 }
-

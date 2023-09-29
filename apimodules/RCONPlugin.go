@@ -4,13 +4,13 @@ package apimodules
 // Author: p0t4t0sandich
 
 import (
-	"ampapi/ampapi"
+	"ampapi-go"
 	"encoding/json"
 )
 
 // struct RCONPlugin
 type RCONPlugin struct {
-    *ampapi.AMPAPI
+	*ampapi.AMPAPI
 }
 
 // Function NewRCONPlugin
@@ -19,14 +19,13 @@ func NewRCONPlugin(api *ampapi.AMPAPI) *RCONPlugin {
 	return &RCONPlugin{api}
 }
 
-/* Dummy - 
+/* Dummy -
  * Name Description Optional
  * return any
  */
 func (a *RCONPlugin) Dummy() any {
-    var args = make(map[string]any)
-    var res any
-    json.Unmarshal(a.ApiCall("RCONPlugin/Dummy", args), &res)
-    return res
+	var args = make(map[string]any)
+	var res any
+	json.Unmarshal(a.ApiCall("RCONPlugin/Dummy", args), &res)
+	return res
 }
-
