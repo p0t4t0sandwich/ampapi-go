@@ -33,8 +33,8 @@ go get github.com/p0t4t0sandwich/ampapi-go
 package main
 
 import (
-    "ampapi-go"
-    "ampapi-go/modules"
+    "github.com/p0t4t0sandwich/ampapi-go"
+    "github.com/p0t4t0sandwich/ampapi-go/apimodules"
 )
 
 func main() {
@@ -57,9 +57,10 @@ func main() {
 package main
 
 import (
-    "ampapi-go"
-    "ampapi-go/modules"
     "strconv"
+
+    "github.com/p0t4t0sandwich/ampapi-go"
+    "github.com/p0t4t0sandwich/ampapi-go/apimodules"
 )
 
 func main() {
@@ -105,8 +106,8 @@ func main() {
 package main
 
 import (
-    "ampapi-go"
-    "ampapi-go/modules"
+    "github.com/p0t4t0sandwich/ampapi-go"
+    "github.com/p0t4t0sandwich/ampapi-go/apimodules"
 )
 
 func main() {

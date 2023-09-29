@@ -1,9 +1,10 @@
 package modules
 
 import (
-	"ampapi-go"
-	"ampapi-go/apimodules"
 	"encoding/json"
+
+	"github.com/p0t4t0sandwich/ampapi-go"
+	"github.com/p0t4t0sandwich/ampapi-go/apimodules"
 )
 
 // Struct ADS

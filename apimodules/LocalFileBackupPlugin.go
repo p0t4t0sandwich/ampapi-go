@@ -4,8 +4,9 @@ package apimodules
 // Author: p0t4t0sandich
 
 import (
-	"ampapi-go"
 	"encoding/json"
+
+	"github.com/p0t4t0sandwich/ampapi-go"
 )
 
 // struct LocalFileBackupPlugin
