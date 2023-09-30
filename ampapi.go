@@ -112,7 +112,7 @@ func (ampapi *AMPAPI) ApiCall(endpoint string, args map[string]any) []byte {
 func (ampapi *AMPAPI) Login() LoginResult {
 	var args = make(map[string]any)
 	args["username"] = ampapi.Username
-	args["password"] = ""
+	args["password"] = ampapi.Password
 	args["token"] = ampapi.RememberMeToken
 	args["rememberMe"] = true
 
