@@ -14,7 +14,7 @@ import (
 const (
 	Author  = "Dylan Sperrer"
 	Email   = "dylan@neuralnexus.dev"
-	Version = "1.0.5"
+	Version = "1.0.6"
 )
 
 // AMPAPI struct
