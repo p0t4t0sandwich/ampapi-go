@@ -133,6 +133,13 @@ type InstanceDatastore struct {
 	FriendlyName string `json:"FriendlyName"` // The friendly name
 }
 
+// InstanceStatus - A struct to represent the object returned by the ADSModule#GetInstanceStatuses() method
+// Author: p0t4t0sandwich
+type InstanceStatus struct {
+	InstanceID UUID `json:"InstanceID"` // The instance ID
+	Running    bool `json:"Running"`    // Whether the instance is running
+}
+
 // LoginResult - Response type for API.Core.Login
 // Author: p0t4t0sandwich
 type LoginResult struct {

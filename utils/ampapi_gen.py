@@ -74,6 +74,7 @@ type_dict = {
 
     ## Custom types
     "ampapi.Result[ampapi.Instance]": "ampapi.Result[ampapi.Instance]",
+    "ampapi.Result[[]ampapi.InstanceStatus]": "ampapi.Result[[]ampapi.InstanceStatus]",
     "ampapi.Result[ampapi.RemoteTargetInfo]": "ampapi.Result[ampapi.RemoteTargetInfo]",
     "ampapi.SettingsSpec": "ampapi.SettingsSpec",
     "ampapi.Status": "ampapi.Status",
@@ -85,6 +86,8 @@ type_dict = {
 custom_types = {
     # API.ADSModule.GetInstance
     "ADSModule.GetInstance": "ampapi.Result[ampapi.Instance]",
+    # API.ADSModule.GetInstanceStatuses
+    "ADSModule.GetInstanceStatuses": "ampapi.Result[[]ampapi.InstanceStatus]",
     # API.ADSModule.GetTargetInfo
     "ADSModule.GetTargetInfo": "ampapi.Result[ampapi.RemoteTargetInfo]",
 
