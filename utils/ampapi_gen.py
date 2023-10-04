@@ -71,6 +71,7 @@ type_dict = {
     "Task<IDictionary<Guid, String>>": "ampapi.Task[map[ampapi.UUID]any]",
     "Task<ActionResult>": "ampapi.Task[ampapi.ActionResult[any]]",
     "Task<ActionResult<Guid>>": "ampapi.Task[ampapi.ActionResult[ampapi.UUID]]",
+    "Task<ActionResult<LicenceInfo>>": "ampapi.Task[ampapi.ActionResult[ampapi.LicenceInfo]]",
 
     ## Custom types
     "ampapi.Result[ampapi.Instance]": "ampapi.Result[ampapi.Instance]",

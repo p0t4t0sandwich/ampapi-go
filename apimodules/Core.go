@@ -31,6 +31,21 @@ func (a *Core) AcknowledgeAMPUpdate() any {
     return res
 }
 
+/* ActivateAMPLicence - 
+ * Name Description Optional
+ * param LicenceKey string  False
+ * param QueryOnly bool  True
+ * return ampapi.Task[ampapi.ActionResult[ampapi.LicenceInfo]]
+ */
+func (a *Core) ActivateAMPLicence(LicenceKey string, QueryOnly bool) ampapi.Task[ampapi.ActionResult[ampapi.LicenceInfo]] {
+    var args = make(map[string]any)
+    args["LicenceKey"] = LicenceKey
+    args["QueryOnly"] = QueryOnly
+    var res ampapi.Task[ampapi.ActionResult[ampapi.LicenceInfo]]
+    json.Unmarshal(a.ApiCall("Core/ActivateAMPLicence", args), &res)
+    return res
+}
+
 /* AddEventTrigger - 
  * Name Description Optional
  * param triggerId ampapi.UUID  False

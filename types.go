@@ -140,6 +140,18 @@ type InstanceStatus struct {
 	Running    bool `json:"Running"`    // Whether the instance is running
 }
 
+// LicenceInfo - A struct to represent the object returned by the ADSModule#GetLicenceInfo() method
+// Author: p0t4t0sandwich
+type LicenceInfo struct {
+	LicenceKey  UUID   `json:"LicenceKey"`  // The licence key
+	Grade       UUID   `json:"Grade"`       // The grade
+	GradeName   string `json:"GradeName"`   // The grade name
+	Product     UUID   `json:"Product"`     // The product
+	ProductName string `json:"ProductName"` // The product name
+	Expires     string `json:"Expires"`     // The expiry date
+	Usage       int    `json:"Usage"`       // The usage
+}
+
 // LoginResult - Response type for API.Core.Login
 // Author: p0t4t0sandwich
 type LoginResult struct {
