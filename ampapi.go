@@ -87,11 +87,12 @@ func (ampapi *AMPAPI) ApiCall(endpoint string, args map[string]any) []byte {
 	req, err := http.NewRequest(ampapi.RequestMethod, ampapi.DataSource+endpoint, body)
 	if err != nil {
 		fmt.Print(err.Error())
-		os.Exit(1)
 	}
+	defer req.Body.Close()
+
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("User-Agent", "ampapi-go/1.0.1")
+	req.Header.Add("User-Agent", "ampapi-go/1.0.8")
 	resp, err := client.Do(req)
 
 	if err != nil {
