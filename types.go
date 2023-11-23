@@ -54,7 +54,7 @@ type CPUInfo struct {
 	Sockets      int    `json:"Sockets"`      // Number of CPU sockets
 	Cores        int    `json:"Cores"`        // Number of CPU cores
 	Threads      int    `json:"Threads"`      // Number of CPU threads
-	Vendor       string `json:"Vendor"`       // CPU vendor
+	Vendor       int    `json:"Vendor"`       // CPU vendor
 	ModelName    string `json:"ModelName"`    // CPU model name
 	TotalCores   int    `json:"TotalCores"`   // Total number of CPU cores
 	TotalThreads int    `json:"TotalThreads"` // Total number of CPU threads
