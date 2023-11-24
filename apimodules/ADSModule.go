@@ -595,10 +595,12 @@ func (a *ADSModule) RefreshInstanceConfig(InstanceId string) ampapi.Task[ampapi.
 
 /* RefreshRemoteConfigStores - 
  * Name Description Optional
+ * param force bool  True
  * return any
  */
-func (a *ADSModule) RefreshRemoteConfigStores() any {
+func (a *ADSModule) RefreshRemoteConfigStores(force bool) any {
     var args = make(map[string]any)
+    args["force"] = force
     var res any
     json.Unmarshal(a.ApiCall("ADSModule/RefreshRemoteConfigStores", args), &res)
     return res
@@ -832,9 +834,9 @@ func (a *ADSModule) UpdateDeploymentTemplate(templateToUpdate any) ampapi.Action
  * param MemoryPolicy any  False
  * param ContainerMaxCPU any  False
  * param ContainerImage string  False
- * return ampapi.Task[ampapi.ActionResult[any]]
+ * return ampapi.ActionResult[any]
  */
-func (a *ADSModule) UpdateInstanceInfo(InstanceId string, FriendlyName string, Description string, StartOnBoot bool, Suspended bool, ExcludeFromFirewall bool, RunInContainer bool, ContainerMemory int32, MemoryPolicy any, ContainerMaxCPU any, ContainerImage string) ampapi.Task[ampapi.ActionResult[any]] {
+func (a *ADSModule) UpdateInstanceInfo(InstanceId string, FriendlyName string, Description string, StartOnBoot bool, Suspended bool, ExcludeFromFirewall bool, RunInContainer bool, ContainerMemory int32, MemoryPolicy any, ContainerMaxCPU any, ContainerImage string) ampapi.ActionResult[any] {
     var args = make(map[string]any)
     args["InstanceId"] = InstanceId
     args["FriendlyName"] = FriendlyName
@@ -847,7 +849,7 @@ func (a *ADSModule) UpdateInstanceInfo(InstanceId string, FriendlyName string, D
     args["MemoryPolicy"] = MemoryPolicy
     args["ContainerMaxCPU"] = ContainerMaxCPU
     args["ContainerImage"] = ContainerImage
-    var res ampapi.Task[ampapi.ActionResult[any]]
+    var res ampapi.ActionResult[any]
     json.Unmarshal(a.ApiCall("ADSModule/UpdateInstanceInfo", args), &res)
     return res
 }
