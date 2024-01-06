@@ -16,7 +16,7 @@ type CommonAPI struct {
 
 // Function NewCommonAPI
 // Creates a new CommonAPI object
-func NewCommonAPI(baseUri string, optional ...string) *CommonAPI {
+func NewCommonAPI(baseUri string, optional ...string) (*CommonAPI, error) {
 	var commonAPI = new(CommonAPI)
 
 	commonAPI.AMPAPI = *ampapi.NewAMPAPI(baseUri, optional...)
@@ -26,16 +26,17 @@ func NewCommonAPI(baseUri string, optional ...string) *CommonAPI {
 	commonAPI.FileManagerPlugin = apimodules.NewFileManagerPlugin(&commonAPI.AMPAPI)
 	commonAPI.LocalFileBackupPlugin = apimodules.NewLocalFileBackupPlugin(&commonAPI.AMPAPI)
 
+	var err error = nil
 	if commonAPI.AMPAPI.Username != "" && (commonAPI.AMPAPI.Password != "" || commonAPI.AMPAPI.RememberMeToken != "") {
-		commonAPI.Login()
+		_, err = commonAPI.Login()
 	}
 
-	return commonAPI
+	return commonAPI, err
 }
 
 // Simplified login function
-func (commonAPI *CommonAPI) Login() ampapi.LoginResult {
-	var loginResult ampapi.LoginResult = commonAPI.AMPAPI.Login()
+func (commonAPI *CommonAPI) Login() (ampapi.LoginResult, error) {
+	loginResult, err := commonAPI.AMPAPI.Login()
 
 	if loginResult.Success {
 		commonAPI.AMPAPI.SessionId = loginResult.SessionId
@@ -52,5 +53,5 @@ func (commonAPI *CommonAPI) Login() ampapi.LoginResult {
 		commonAPI.LocalFileBackupPlugin.RememberMeToken = loginResult.RememberMeToken
 	}
 
-	return loginResult
+	return loginResult, err
 }

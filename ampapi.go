@@ -13,7 +13,7 @@ import (
 const (
 	Author  = "Dylan Sperrer"
 	Email   = "dylan@neuralnexus.dev"
-	Version = "1.0.10"
+	Version = "1.0.11"
 )
 
 // AMPAPI struct
@@ -122,7 +122,7 @@ func (ampapi *AMPAPI) ApiCall(endpoint string, args map[string]any) ([]byte, err
 }
 
 // Simplified login function
-func (ampapi *AMPAPI) Login() LoginResult {
+func (ampapi *AMPAPI) Login() (LoginResult, error) {
 	var args = make(map[string]any)
 	args["username"] = ampapi.Username
 	args["password"] = ampapi.Password
@@ -135,7 +135,7 @@ func (ampapi *AMPAPI) Login() LoginResult {
 	}
 
 	var loginResult LoginResult
-	res, _ := ampapi.ApiCall("Core/Login", args)
+	res, err := ampapi.ApiCall("Core/Login", args)
 	json.Unmarshal(res, &loginResult)
 
 	if loginResult.Success {
@@ -143,5 +143,5 @@ func (ampapi *AMPAPI) Login() LoginResult {
 		ampapi.RememberMeToken = loginResult.RememberMeToken
 	}
 
-	return loginResult
+	return loginResult, err
 }

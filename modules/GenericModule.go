@@ -15,25 +15,27 @@ type GenericModule struct {
 
 // Function NewGenericModule
 // Creates a new GenericModule object
-func NewGenericModule(baseUri string, optional ...string) *GenericModule {
+func NewGenericModule(baseUri string, optional ...string) (*GenericModule, error) {
 	var genericModule = new(GenericModule)
 
-	genericModule.CommonAPI = *NewCommonAPI(baseUri, optional...)
+	capi, _ := NewCommonAPI(baseUri, optional...)
+	genericModule.CommonAPI = *capi
 
 	genericModule.GenericModule = apimodules.NewGenericModule(&genericModule.AMPAPI)
 	genericModule.RCONPlugin = apimodules.NewRCONPlugin(&genericModule.AMPAPI)
 	genericModule.Steamcmdplugin = apimodules.NewSteamcmdplugin(&genericModule.AMPAPI)
 
+	var err error = nil
 	if genericModule.AMPAPI.Username != "" && (genericModule.AMPAPI.Password != "" || genericModule.AMPAPI.RememberMeToken != "") {
-		genericModule.Login()
+		_, err = genericModule.Login()
 	}
 
-	return genericModule
+	return genericModule, err
 }
 
 // Simplified login function
-func (genericModule *GenericModule) Login() ampapi.LoginResult {
-	var loginResult ampapi.LoginResult = genericModule.CommonAPI.Login()
+func (genericModule *GenericModule) Login() (ampapi.LoginResult, error) {
+	loginResult, err := genericModule.AMPAPI.Login()
 
 	if loginResult.Success {
 		genericModule.AMPAPI.SessionId = loginResult.SessionId
@@ -48,5 +50,5 @@ func (genericModule *GenericModule) Login() ampapi.LoginResult {
 		genericModule.Steamcmdplugin.RememberMeToken = loginResult.RememberMeToken
 	}
 
-	return loginResult
+	return loginResult, err
 }

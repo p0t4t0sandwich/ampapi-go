@@ -15,23 +15,25 @@ type ADS struct {
 
 // Function NewADS
 // Creates a new ADS object
-func NewADS(baseUri string, optional ...string) *ADS {
+func NewADS(baseUri string, optional ...string) (*ADS, error) {
 	var ads = new(ADS)
 
-	ads.CommonAPI = *NewCommonAPI(baseUri, optional...)
+	capi, _ := NewCommonAPI(baseUri, optional...)
+	ads.CommonAPI = *capi
 
 	ads.ADSModule = apimodules.NewADSModule(&ads.AMPAPI)
 
+	var err error = nil
 	if ads.AMPAPI.Username != "" && (ads.AMPAPI.Password != "" || ads.AMPAPI.RememberMeToken != "") {
-		ads.Login()
+		_, err = ads.Login()
 	}
 
-	return ads
+	return ads, err
 }
 
 // Simplified login function
-func (ads *ADS) Login() ampapi.LoginResult {
-	var loginResult ampapi.LoginResult = ads.CommonAPI.Login()
+func (ads *ADS) Login() (ampapi.LoginResult, error) {
+	loginResult, err := ads.AMPAPI.Login()
 
 	if loginResult.Success {
 		ads.AMPAPI.SessionId = loginResult.SessionId
@@ -42,14 +44,14 @@ func (ads *ADS) Login() ampapi.LoginResult {
 		ads.ADSModule.RememberMeToken = loginResult.RememberMeToken
 	}
 
-	return loginResult
+	return loginResult, err
 }
 
 // ADS.InstanceLogin - Function to proxy a login to an instance
 // instanceId: The instance ID to login to
 // module: The module to login to
 // Returns: The module object
-func (ads *ADS) InstanceLogin(instanceId ampapi.UUID, module string) interface{} {
+func (ads *ADS) InstanceLogin(instanceId ampapi.UUID, module string) (interface{}, error) {
 	var args = make(map[string]any)
 	args["username"] = ads.Username
 	args["password"] = ads.Password
@@ -57,7 +59,7 @@ func (ads *ADS) InstanceLogin(instanceId ampapi.UUID, module string) interface{}
 	args["rememberMe"] = true
 
 	var loginResult ampapi.LoginResult
-	res, _ := ads.ApiCall("ADSModule/Servers/"+instanceId.String()+"/Login", args)
+	res, err := ads.ApiCall("ADSModule/Servers/"+instanceId.String()+"/Login", args)
 	json.Unmarshal(res, &loginResult)
 
 	if loginResult.Success {
@@ -78,6 +80,6 @@ func (ads *ADS) InstanceLogin(instanceId ampapi.UUID, module string) interface{}
 			return NewCommonAPI(newBaseUri, ads.CommonAPI.Username, "", rememberMeToken, sessionId)
 		}
 	} else {
-		return nil
+		return nil, err
 	}
 }

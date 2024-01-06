@@ -13,23 +13,25 @@ type Minecraft struct {
 
 // Function NewMinecraft
 // Creates a new Minecraft object
-func NewMinecraft(baseUri string, optional ...string) *Minecraft {
+func NewMinecraft(baseUri string, optional ...string) (*Minecraft, error) {
 	var minecraft = new(Minecraft)
 
-	minecraft.CommonAPI = *NewCommonAPI(baseUri, optional...)
+	capi, _ := NewCommonAPI(baseUri, optional...)
+	minecraft.CommonAPI = *capi
 
 	minecraft.MinecraftModule = apimodules.NewMinecraftModule(&minecraft.AMPAPI)
 
+	var err error = nil
 	if minecraft.AMPAPI.Username != "" && (minecraft.AMPAPI.Password != "" || minecraft.AMPAPI.RememberMeToken != "") {
-		minecraft.Login()
+		_, err = minecraft.Login()
 	}
 
-	return minecraft
+	return minecraft, err
 }
 
 // Simplified login function
-func (minecraft *Minecraft) Login() ampapi.LoginResult {
-	var loginResult ampapi.LoginResult = minecraft.CommonAPI.Login()
+func (minecraft *Minecraft) Login() (ampapi.LoginResult, error) {
+	loginResult, err := minecraft.AMPAPI.Login()
 
 	if loginResult.Success {
 		minecraft.AMPAPI.SessionId = loginResult.SessionId
@@ -40,5 +42,5 @@ func (minecraft *Minecraft) Login() ampapi.LoginResult {
 		minecraft.MinecraftModule.RememberMeToken = loginResult.RememberMeToken
 	}
 
-	return loginResult
+	return loginResult, err
 }
