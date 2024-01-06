@@ -24,11 +24,12 @@ func NewSteamcmdplugin(api *ampapi.AMPAPI) *Steamcmdplugin {
  * Name Description Optional
  * return any
  */
-func (a *Steamcmdplugin) CancelSteamGuard() any {
+func (a *Steamcmdplugin) CancelSteamGuard() (any, error) {
     var args = make(map[string]any)
     var res any
-    json.Unmarshal(a.ApiCall("Steamcmdplugin/CancelSteamGuard", args), &res)
-    return res
+    bytes, err := a.ApiCall("Steamcmdplugin/CancelSteamGuard", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* SteamGuardCode - 
@@ -36,12 +37,13 @@ func (a *Steamcmdplugin) CancelSteamGuard() any {
  * param code string  False
  * return any
  */
-func (a *Steamcmdplugin) SteamGuardCode(code string) any {
+func (a *Steamcmdplugin) SteamGuardCode(code string) (any, error) {
     var args = make(map[string]any)
     args["code"] = code
     var res any
-    json.Unmarshal(a.ApiCall("Steamcmdplugin/SteamGuardCode", args), &res)
-    return res
+    bytes, err := a.ApiCall("Steamcmdplugin/SteamGuardCode", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* SteamUsernamePassword - 
@@ -50,12 +52,13 @@ func (a *Steamcmdplugin) SteamGuardCode(code string) any {
  * param password string  False
  * return any
  */
-func (a *Steamcmdplugin) SteamUsernamePassword(username string, password string) any {
+func (a *Steamcmdplugin) SteamUsernamePassword(username string, password string) (any, error) {
     var args = make(map[string]any)
     args["username"] = username
     args["password"] = password
     var res any
-    json.Unmarshal(a.ApiCall("Steamcmdplugin/SteamUsernamePassword", args), &res)
-    return res
+    bytes, err := a.ApiCall("Steamcmdplugin/SteamUsernamePassword", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 

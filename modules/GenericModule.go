@@ -8,6 +8,7 @@ import (
 // Struct GenericModule
 type GenericModule struct {
 	CommonAPI
+	GenericModule  *apimodules.GenericModule
 	RCONPlugin     *apimodules.RCONPlugin
 	Steamcmdplugin *apimodules.Steamcmdplugin
 }
@@ -19,6 +20,7 @@ func NewGenericModule(baseUri string, optional ...string) *GenericModule {
 
 	genericModule.CommonAPI = *NewCommonAPI(baseUri, optional...)
 
+	genericModule.GenericModule = apimodules.NewGenericModule(&genericModule.AMPAPI)
 	genericModule.RCONPlugin = apimodules.NewRCONPlugin(&genericModule.AMPAPI)
 	genericModule.Steamcmdplugin = apimodules.NewSteamcmdplugin(&genericModule.AMPAPI)
 
@@ -38,6 +40,8 @@ func (genericModule *GenericModule) Login() ampapi.LoginResult {
 		genericModule.AMPAPI.RememberMeToken = loginResult.RememberMeToken
 
 		// Update the session ID and remember me token of submodules
+		genericModule.GenericModule.SessionId = loginResult.SessionId
+		genericModule.GenericModule.RememberMeToken = loginResult.RememberMeToken
 		genericModule.RCONPlugin.SessionId = loginResult.SessionId
 		genericModule.RCONPlugin.RememberMeToken = loginResult.RememberMeToken
 		genericModule.Steamcmdplugin.SessionId = loginResult.SessionId

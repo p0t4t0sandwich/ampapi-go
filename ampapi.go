@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -14,7 +13,7 @@ import (
 const (
 	Author  = "Dylan Sperrer"
 	Email   = "dylan@neuralnexus.dev"
-	Version = "1.0.8"
+	Version = "1.0.10"
 )
 
 // AMPAPI struct
@@ -28,6 +27,13 @@ type AMPAPI struct {
 	RequestMethod   string
 	lastAPICall     int64
 	RelogInterval   int64
+}
+
+// AMPAPIError struct
+type AMPAPIError struct {
+	Title      string `json:"Title"`      // Error title
+	Message    string `json:"Message"`    // Error message
+	StackTrace string `json:"StackTrace"` // Stack trace
 }
 
 // NewAMPAPI creates a new AMPAPI object
@@ -69,7 +75,7 @@ func NewAMPAPI(baseUri string, optional ...string) *AMPAPI {
 }
 
 // apiCall is a function that takes an endpoint and returns the response
-func (ampapi *AMPAPI) ApiCall(endpoint string, args map[string]any) []byte {
+func (ampapi *AMPAPI) ApiCall(endpoint string, args map[string]any) ([]byte, error) {
 	// Check the last API call time, and if it's been more than the relog interval, relog.
 	var now int64 = time.Now().UnixMilli()
 	if now-ampapi.lastAPICall > ampapi.RelogInterval {
@@ -86,27 +92,33 @@ func (ampapi *AMPAPI) ApiCall(endpoint string, args map[string]any) []byte {
 	client := &http.Client{}
 	req, err := http.NewRequest(ampapi.RequestMethod, ampapi.DataSource+endpoint, body)
 	if err != nil {
-		fmt.Print(err.Error())
+		return nil, err
 	}
 	defer req.Body.Close()
 
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("User-Agent", "ampapi-go/1.0.8")
+	req.Header.Add("User-Agent", "ampapi-go/"+Version)
 	resp, err := client.Do(req)
 
 	if err != nil {
-		fmt.Print(err.Error())
-		os.Exit(1)
+		return nil, err
 	}
 
 	result, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Print(err.Error())
-		os.Exit(1)
+		return nil, err
 	}
 
-	return result
+	// Raise an exception if the API call failed
+	var errorResult AMPAPIError
+	json.Unmarshal(result, &errorResult)
+	// TODO: There's an internal library issue with Core/Login that needs to be solved.
+	if endpoint != "Core/Login" && errorResult.Title != "" && errorResult.Message != "" && errorResult.StackTrace != "" {
+		return nil, fmt.Errorf("%s: %s\n%s", errorResult.Title, errorResult.Message, errorResult.StackTrace)
+	}
+
+	return result, nil
 }
 
 // Simplified login function
@@ -123,7 +135,8 @@ func (ampapi *AMPAPI) Login() LoginResult {
 	}
 
 	var loginResult LoginResult
-	json.Unmarshal(ampapi.ApiCall("Core/Login", args), &loginResult)
+	res, _ := ampapi.ApiCall("Core/Login", args)
+	json.Unmarshal(res, &loginResult)
 
 	if loginResult.Success {
 		ampapi.SessionId = loginResult.SessionId

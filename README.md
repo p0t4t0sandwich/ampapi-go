@@ -67,9 +67,7 @@ func main() {
     API := modules.NewADS("http://localhost:8080/", "admin", "myfancypassword123")
 
     // Get the available instances
-    instancesResult := API.ADSModule.GetInstances()
-
-    targets := instancesResult.Result
+    targets := API.ADSModule.GetInstances()
 
     // In this example, my Hub server is on the second target
     // If you're running a standalone setup, you can just use targets[1]

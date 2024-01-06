@@ -24,10 +24,11 @@ func NewRCONPlugin(api *ampapi.AMPAPI) *RCONPlugin {
  * Name Description Optional
  * return any
  */
-func (a *RCONPlugin) Dummy() any {
+func (a *RCONPlugin) Dummy() (any, error) {
     var args = make(map[string]any)
     var res any
-    json.Unmarshal(a.ApiCall("RCONPlugin/Dummy", args), &res)
-    return res
+    bytes, err := a.ApiCall("RCONPlugin/Dummy", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 

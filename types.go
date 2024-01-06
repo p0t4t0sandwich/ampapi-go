@@ -160,6 +160,7 @@ type LoginResult struct {
 	SessionId       string   `json:"sessionID"`       // The session ID
 	RememberMeToken string   `json:"rememberMeToken"` // The remember me token
 	UserInfo        UserInfo `json:"userInfo"`        // The user information
+	ResultReason    string   `json:"resultReason"`    // The reason of the result
 	Result          float64  `json:"result"`          // The result
 }
 
@@ -235,12 +236,6 @@ type RemoteTargetInfo struct {
 	DeploysInContainers bool                `json:"DeploysInContainers"` // Whether the target deploys in containers
 }
 
-// Result - Generic response type for calls that return a result
-// Author: p0t4t0sandwich
-type Result[T any] struct {
-	Result T `json:"result"` // The result object
-}
-
 // RunningTask - A running task object returned by the Core#GetTasks() method
 // Author: p0t4t0sandwich
 type RunningTask struct {
@@ -260,15 +255,9 @@ type RunningTask struct {
 	Status           string  `json:"Status"`           // The status
 }
 
-// SettingsSpec - Response object for Core.GetSettingsSpec()
-// Author: p0t4t0sandwich
-type SettingsSpec struct {
-	Result map[string]Spec `json:"result"` // The result
-}
-
 // Spec - A setting specification object
 // Author: p0t4t0sandwich
-type Spec struct {
+type SettingSpec struct {
 	ReadOnly              bool   `json:"ReadOnly"`              // Whether the setting is read-only
 	Name                  string `json:"Name"`                  // The name
 	Description           string `json:"Description"`           // The description
@@ -358,12 +347,6 @@ type Status struct {
 	State   State             `json:"State"`   // The state of the instance
 	Uptime  string            `json:"Uptime"`  // The uptime of the instance
 	Metrics map[string]Metric `json:"Metrics"` // The metrics
-}
-
-// Task - Generic response type for calls that return a result
-// Author: p0t4t0sandwich
-type Task[T any] struct {
-	Result T `json:"result"` // The result object
 }
 
 // UpdateInfo - A struct to represent the object returned by the ADSModule#GetUpdateInfo() method

@@ -27,14 +27,15 @@ func NewFileManagerPlugin(api *ampapi.AMPAPI) *FileManagerPlugin {
  * param Delete bool  False
  * return any
  */
-func (a *FileManagerPlugin) AppendFileChunk(Filename string, Data string, Delete bool) any {
+func (a *FileManagerPlugin) AppendFileChunk(Filename string, Data string, Delete bool) (any, error) {
     var args = make(map[string]any)
     args["Filename"] = Filename
     args["Data"] = Data
     args["Delete"] = Delete
     var res any
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/AppendFileChunk", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/AppendFileChunk", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* CalculateFileMD5Sum - 
@@ -42,12 +43,13 @@ func (a *FileManagerPlugin) AppendFileChunk(Filename string, Data string, Delete
  * param FilePath string  False
  * return ampapi.ActionResult[string]
  */
-func (a *FileManagerPlugin) CalculateFileMD5Sum(FilePath string) ampapi.ActionResult[string] {
+func (a *FileManagerPlugin) CalculateFileMD5Sum(FilePath string) (ampapi.ActionResult[string], error) {
     var args = make(map[string]any)
     args["FilePath"] = FilePath
     var res ampapi.ActionResult[string]
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/CalculateFileMD5Sum", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/CalculateFileMD5Sum", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* ChangeExclusion - 
@@ -57,14 +59,15 @@ func (a *FileManagerPlugin) CalculateFileMD5Sum(FilePath string) ampapi.ActionRe
  * param Exclude bool  False
  * return ampapi.ActionResult[any]
  */
-func (a *FileManagerPlugin) ChangeExclusion(ModifyPath string, AsDirectory bool, Exclude bool) ampapi.ActionResult[any] {
+func (a *FileManagerPlugin) ChangeExclusion(ModifyPath string, AsDirectory bool, Exclude bool) (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
     args["ModifyPath"] = ModifyPath
     args["AsDirectory"] = AsDirectory
     args["Exclude"] = Exclude
     var res ampapi.ActionResult[any]
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/ChangeExclusion", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/ChangeExclusion", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* CopyFile - 
@@ -73,13 +76,14 @@ func (a *FileManagerPlugin) ChangeExclusion(ModifyPath string, AsDirectory bool,
  * param TargetDirectory string  False
  * return ampapi.ActionResult[any]
  */
-func (a *FileManagerPlugin) CopyFile(Origin string, TargetDirectory string) ampapi.ActionResult[any] {
+func (a *FileManagerPlugin) CopyFile(Origin string, TargetDirectory string) (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
     args["Origin"] = Origin
     args["TargetDirectory"] = TargetDirectory
     var res ampapi.ActionResult[any]
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/CopyFile", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/CopyFile", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* CreateArchive - 
@@ -87,12 +91,13 @@ func (a *FileManagerPlugin) CopyFile(Origin string, TargetDirectory string) ampa
  * param PathToArchive string  False
  * return ampapi.ActionResult[any]
  */
-func (a *FileManagerPlugin) CreateArchive(PathToArchive string) ampapi.ActionResult[any] {
+func (a *FileManagerPlugin) CreateArchive(PathToArchive string) (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
     args["PathToArchive"] = PathToArchive
     var res ampapi.ActionResult[any]
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/CreateArchive", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/CreateArchive", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* CreateDirectory - 
@@ -100,12 +105,13 @@ func (a *FileManagerPlugin) CreateArchive(PathToArchive string) ampapi.ActionRes
  * param NewPath string  False
  * return ampapi.ActionResult[any]
  */
-func (a *FileManagerPlugin) CreateDirectory(NewPath string) ampapi.ActionResult[any] {
+func (a *FileManagerPlugin) CreateDirectory(NewPath string) (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
     args["NewPath"] = NewPath
     var res ampapi.ActionResult[any]
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/CreateDirectory", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/CreateDirectory", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* DownloadFileFromURL - 
@@ -114,24 +120,26 @@ func (a *FileManagerPlugin) CreateDirectory(NewPath string) ampapi.ActionResult[
  * param TargetDirectory string  False
  * return ampapi.ActionResult[any]
  */
-func (a *FileManagerPlugin) DownloadFileFromURL(Source ampapi.URL, TargetDirectory string) ampapi.ActionResult[any] {
+func (a *FileManagerPlugin) DownloadFileFromURL(Source ampapi.URL, TargetDirectory string) (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
     args["Source"] = Source
     args["TargetDirectory"] = TargetDirectory
     var res ampapi.ActionResult[any]
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/DownloadFileFromURL", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/DownloadFileFromURL", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* Dummy - 
  * Name Description Optional
  * return any
  */
-func (a *FileManagerPlugin) Dummy() any {
+func (a *FileManagerPlugin) Dummy() (any, error) {
     var args = make(map[string]any)
     var res any
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/Dummy", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/Dummy", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* EmptyTrash - 
@@ -139,12 +147,13 @@ func (a *FileManagerPlugin) Dummy() any {
  * param TrashDirectoryName string  False
  * return ampapi.ActionResult[any]
  */
-func (a *FileManagerPlugin) EmptyTrash(TrashDirectoryName string) ampapi.ActionResult[any] {
+func (a *FileManagerPlugin) EmptyTrash(TrashDirectoryName string) (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
     args["TrashDirectoryName"] = TrashDirectoryName
     var res ampapi.ActionResult[any]
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/EmptyTrash", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/EmptyTrash", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* ExtractArchive - 
@@ -153,26 +162,28 @@ func (a *FileManagerPlugin) EmptyTrash(TrashDirectoryName string) ampapi.ActionR
  * param DestinationPath string  True
  * return ampapi.ActionResult[any]
  */
-func (a *FileManagerPlugin) ExtractArchive(ArchivePath string, DestinationPath string) ampapi.ActionResult[any] {
+func (a *FileManagerPlugin) ExtractArchive(ArchivePath string, DestinationPath string) (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
     args["ArchivePath"] = ArchivePath
     args["DestinationPath"] = DestinationPath
     var res ampapi.ActionResult[any]
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/ExtractArchive", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/ExtractArchive", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* GetDirectoryListing - 
  * Name Description Optional
  * param Dir string  False
- * return ampapi.Result[[]map[string]any]
+ * return []map[string]any
  */
-func (a *FileManagerPlugin) GetDirectoryListing(Dir string) ampapi.Result[[]map[string]any] {
+func (a *FileManagerPlugin) GetDirectoryListing(Dir string) ([]map[string]any, error) {
     var args = make(map[string]any)
     args["Dir"] = Dir
-    var res ampapi.Result[[]map[string]any]
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/GetDirectoryListing", args), &res)
-    return res
+    var res []map[string]any
+    bytes, err := a.ApiCall("FileManagerPlugin/GetDirectoryListing", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* GetFileChunk - 
@@ -182,14 +193,15 @@ func (a *FileManagerPlugin) GetDirectoryListing(Dir string) ampapi.Result[[]map[
  * param Length int32  False
  * return any
  */
-func (a *FileManagerPlugin) GetFileChunk(Filename string, Position int64, Length int32) any {
+func (a *FileManagerPlugin) GetFileChunk(Filename string, Position int64, Length int32) (any, error) {
     var args = make(map[string]any)
     args["Filename"] = Filename
     args["Position"] = Position
     args["Length"] = Length
     var res any
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/GetFileChunk", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/GetFileChunk", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* ReadFileChunk - 
@@ -199,14 +211,15 @@ func (a *FileManagerPlugin) GetFileChunk(Filename string, Position int64, Length
  * param ChunkSize int64  True
  * return ampapi.ActionResult[string]
  */
-func (a *FileManagerPlugin) ReadFileChunk(Filename string, Offset int64, ChunkSize int64) ampapi.ActionResult[string] {
+func (a *FileManagerPlugin) ReadFileChunk(Filename string, Offset int64, ChunkSize int64) (ampapi.ActionResult[string], error) {
     var args = make(map[string]any)
     args["Filename"] = Filename
     args["Offset"] = Offset
     args["ChunkSize"] = ChunkSize
     var res ampapi.ActionResult[string]
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/ReadFileChunk", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/ReadFileChunk", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* RenameDirectory - The name component of the new directory (not the full path)
@@ -215,13 +228,14 @@ func (a *FileManagerPlugin) ReadFileChunk(Filename string, Offset int64, ChunkSi
  * param NewDirectoryName string The name component of the new directory (not the full path) False
  * return ampapi.ActionResult[any]
  */
-func (a *FileManagerPlugin) RenameDirectory(oldDirectory string, NewDirectoryName string) ampapi.ActionResult[any] {
+func (a *FileManagerPlugin) RenameDirectory(oldDirectory string, NewDirectoryName string) (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
     args["oldDirectory"] = oldDirectory
     args["NewDirectoryName"] = NewDirectoryName
     var res ampapi.ActionResult[any]
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/RenameDirectory", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/RenameDirectory", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* RenameFile - 
@@ -230,13 +244,14 @@ func (a *FileManagerPlugin) RenameDirectory(oldDirectory string, NewDirectoryNam
  * param NewFilename string  False
  * return ampapi.ActionResult[any]
  */
-func (a *FileManagerPlugin) RenameFile(Filename string, NewFilename string) ampapi.ActionResult[any] {
+func (a *FileManagerPlugin) RenameFile(Filename string, NewFilename string) (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
     args["Filename"] = Filename
     args["NewFilename"] = NewFilename
     var res ampapi.ActionResult[any]
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/RenameFile", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/RenameFile", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* TrashDirectory - 
@@ -244,12 +259,13 @@ func (a *FileManagerPlugin) RenameFile(Filename string, NewFilename string) ampa
  * param DirectoryName string  False
  * return ampapi.ActionResult[any]
  */
-func (a *FileManagerPlugin) TrashDirectory(DirectoryName string) ampapi.ActionResult[any] {
+func (a *FileManagerPlugin) TrashDirectory(DirectoryName string) (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
     args["DirectoryName"] = DirectoryName
     var res ampapi.ActionResult[any]
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/TrashDirectory", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/TrashDirectory", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* TrashFile - 
@@ -257,12 +273,13 @@ func (a *FileManagerPlugin) TrashDirectory(DirectoryName string) ampapi.ActionRe
  * param Filename string  False
  * return ampapi.ActionResult[any]
  */
-func (a *FileManagerPlugin) TrashFile(Filename string) ampapi.ActionResult[any] {
+func (a *FileManagerPlugin) TrashFile(Filename string) (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
     args["Filename"] = Filename
     var res ampapi.ActionResult[any]
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/TrashFile", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/TrashFile", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* WriteFileChunk - 
@@ -273,14 +290,15 @@ func (a *FileManagerPlugin) TrashFile(Filename string) ampapi.ActionResult[any] 
  * param FinalChunk bool  False
  * return ampapi.ActionResult[any]
  */
-func (a *FileManagerPlugin) WriteFileChunk(Filename string, Data string, Offset int64, FinalChunk bool) ampapi.ActionResult[any] {
+func (a *FileManagerPlugin) WriteFileChunk(Filename string, Data string, Offset int64, FinalChunk bool) (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
     args["Filename"] = Filename
     args["Data"] = Data
     args["Offset"] = Offset
     args["FinalChunk"] = FinalChunk
     var res ampapi.ActionResult[any]
-    json.Unmarshal(a.ApiCall("FileManagerPlugin/WriteFileChunk", args), &res)
-    return res
+    bytes, err := a.ApiCall("FileManagerPlugin/WriteFileChunk", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 

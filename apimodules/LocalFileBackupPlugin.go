@@ -23,14 +23,15 @@ func NewLocalFileBackupPlugin(api *ampapi.AMPAPI) *LocalFileBackupPlugin {
 /* DeleteFromS3 - 
  * Name Description Optional
  * param BackupId ampapi.UUID  False
- * return ampapi.Task[ampapi.ActionResult[any]]
+ * return ampapi.ActionResult[any]
  */
-func (a *LocalFileBackupPlugin) DeleteFromS3(BackupId ampapi.UUID) ampapi.Task[ampapi.ActionResult[any]] {
+func (a *LocalFileBackupPlugin) DeleteFromS3(BackupId ampapi.UUID) (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
     args["BackupId"] = BackupId
-    var res ampapi.Task[ampapi.ActionResult[any]]
-    json.Unmarshal(a.ApiCall("LocalFileBackupPlugin/DeleteFromS3", args), &res)
-    return res
+    var res ampapi.ActionResult[any]
+    bytes, err := a.ApiCall("LocalFileBackupPlugin/DeleteFromS3", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* DeleteLocalBackup - 
@@ -38,36 +39,39 @@ func (a *LocalFileBackupPlugin) DeleteFromS3(BackupId ampapi.UUID) ampapi.Task[a
  * param BackupId ampapi.UUID  False
  * return any
  */
-func (a *LocalFileBackupPlugin) DeleteLocalBackup(BackupId ampapi.UUID) any {
+func (a *LocalFileBackupPlugin) DeleteLocalBackup(BackupId ampapi.UUID) (any, error) {
     var args = make(map[string]any)
     args["BackupId"] = BackupId
     var res any
-    json.Unmarshal(a.ApiCall("LocalFileBackupPlugin/DeleteLocalBackup", args), &res)
-    return res
+    bytes, err := a.ApiCall("LocalFileBackupPlugin/DeleteLocalBackup", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* DownloadFromS3 - 
  * Name Description Optional
  * param BackupId ampapi.UUID  False
- * return ampapi.Result[ampapi.RunningTask]
+ * return ampapi.RunningTask
  */
-func (a *LocalFileBackupPlugin) DownloadFromS3(BackupId ampapi.UUID) ampapi.Result[ampapi.RunningTask] {
+func (a *LocalFileBackupPlugin) DownloadFromS3(BackupId ampapi.UUID) (ampapi.RunningTask, error) {
     var args = make(map[string]any)
     args["BackupId"] = BackupId
-    var res ampapi.Result[ampapi.RunningTask]
-    json.Unmarshal(a.ApiCall("LocalFileBackupPlugin/DownloadFromS3", args), &res)
-    return res
+    var res ampapi.RunningTask
+    bytes, err := a.ApiCall("LocalFileBackupPlugin/DownloadFromS3", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* GetBackups - 
  * Name Description Optional
- * return ampapi.Result[[]any]
+ * return []any
  */
-func (a *LocalFileBackupPlugin) GetBackups() ampapi.Result[[]any] {
+func (a *LocalFileBackupPlugin) GetBackups() ([]any, error) {
     var args = make(map[string]any)
-    var res ampapi.Result[[]any]
-    json.Unmarshal(a.ApiCall("LocalFileBackupPlugin/GetBackups", args), &res)
-    return res
+    var res []any
+    bytes, err := a.ApiCall("LocalFileBackupPlugin/GetBackups", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* RestoreBackup - 
@@ -76,13 +80,14 @@ func (a *LocalFileBackupPlugin) GetBackups() ampapi.Result[[]any] {
  * param DeleteExistingData bool  True
  * return ampapi.ActionResult[any]
  */
-func (a *LocalFileBackupPlugin) RestoreBackup(BackupId ampapi.UUID, DeleteExistingData bool) ampapi.ActionResult[any] {
+func (a *LocalFileBackupPlugin) RestoreBackup(BackupId ampapi.UUID, DeleteExistingData bool) (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
     args["BackupId"] = BackupId
     args["DeleteExistingData"] = DeleteExistingData
     var res ampapi.ActionResult[any]
-    json.Unmarshal(a.ApiCall("LocalFileBackupPlugin/RestoreBackup", args), &res)
-    return res
+    bytes, err := a.ApiCall("LocalFileBackupPlugin/RestoreBackup", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* SetBackupSticky - 
@@ -91,13 +96,14 @@ func (a *LocalFileBackupPlugin) RestoreBackup(BackupId ampapi.UUID, DeleteExisti
  * param Sticky bool  False
  * return any
  */
-func (a *LocalFileBackupPlugin) SetBackupSticky(BackupId ampapi.UUID, Sticky bool) any {
+func (a *LocalFileBackupPlugin) SetBackupSticky(BackupId ampapi.UUID, Sticky bool) (any, error) {
     var args = make(map[string]any)
     args["BackupId"] = BackupId
     args["Sticky"] = Sticky
     var res any
-    json.Unmarshal(a.ApiCall("LocalFileBackupPlugin/SetBackupSticky", args), &res)
-    return res
+    bytes, err := a.ApiCall("LocalFileBackupPlugin/SetBackupSticky", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* TakeBackup - 
@@ -107,26 +113,28 @@ func (a *LocalFileBackupPlugin) SetBackupSticky(BackupId ampapi.UUID, Sticky boo
  * param Sticky bool  False
  * return ampapi.ActionResult[any]
  */
-func (a *LocalFileBackupPlugin) TakeBackup(Title string, Description string, Sticky bool) ampapi.ActionResult[any] {
+func (a *LocalFileBackupPlugin) TakeBackup(Title string, Description string, Sticky bool) (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
     args["Title"] = Title
     args["Description"] = Description
     args["Sticky"] = Sticky
     var res ampapi.ActionResult[any]
-    json.Unmarshal(a.ApiCall("LocalFileBackupPlugin/TakeBackup", args), &res)
-    return res
+    bytes, err := a.ApiCall("LocalFileBackupPlugin/TakeBackup", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
 /* UploadToS3 - 
  * Name Description Optional
  * param BackupId ampapi.UUID  False
- * return ampapi.Result[ampapi.RunningTask]
+ * return ampapi.RunningTask
  */
-func (a *LocalFileBackupPlugin) UploadToS3(BackupId ampapi.UUID) ampapi.Result[ampapi.RunningTask] {
+func (a *LocalFileBackupPlugin) UploadToS3(BackupId ampapi.UUID) (ampapi.RunningTask, error) {
     var args = make(map[string]any)
     args["BackupId"] = BackupId
-    var res ampapi.Result[ampapi.RunningTask]
-    json.Unmarshal(a.ApiCall("LocalFileBackupPlugin/UploadToS3", args), &res)
-    return res
+    var res ampapi.RunningTask
+    bytes, err := a.ApiCall("LocalFileBackupPlugin/UploadToS3", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 

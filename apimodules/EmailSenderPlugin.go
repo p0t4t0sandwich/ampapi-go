@@ -22,12 +22,13 @@ func NewEmailSenderPlugin(api *ampapi.AMPAPI) *EmailSenderPlugin {
 
 /* TestSMTPSettings - 
  * Name Description Optional
- * return ampapi.Task[ampapi.ActionResult[any]]
+ * return ampapi.ActionResult[any]
  */
-func (a *EmailSenderPlugin) TestSMTPSettings() ampapi.Task[ampapi.ActionResult[any]] {
+func (a *EmailSenderPlugin) TestSMTPSettings() (ampapi.ActionResult[any], error) {
     var args = make(map[string]any)
-    var res ampapi.Task[ampapi.ActionResult[any]]
-    json.Unmarshal(a.ApiCall("EmailSenderPlugin/TestSMTPSettings", args), &res)
-    return res
+    var res ampapi.ActionResult[any]
+    bytes, err := a.ApiCall("EmailSenderPlugin/TestSMTPSettings", args)
+    json.Unmarshal(bytes, &res)
+    return res, err
 }
 
