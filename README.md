@@ -39,7 +39,10 @@ import (
 
 func main() {
     // If you know the module that the instance is using, specify it instead of CommonAPI
-    API := modules.NewCommonAPI("http://localhost:8080/", "admin", "myfancypassword123")
+    API, err := modules.NewCommonAPI("http://localhost:8080/", "admin", "myfancypassword123")
+    if err != nil {
+        panic(err)
+    }
 
     // API call parameters are simply in the same order as shown in the documentation.
     API.Core.SendConsoleMessage("say Hello Everyone, this message was sent from the Go API!")
@@ -64,10 +67,16 @@ import (
 )
 
 func main() {
-    API := modules.NewADS("http://localhost:8080/", "admin", "myfancypassword123")
+    API, err := modules.NewADS("http://localhost:8080/", "admin", "myfancypassword123")
+    if err != nil {
+        panic(err)
+    }
 
     // Get the available instances
-    targets := API.ADSModule.GetInstances()
+    targets, err := API.ADSModule.GetInstances()
+    if err != nil {
+        panic(err)
+    }
 
     // In this example, my Hub server is on the second target
     // If you're running a standalone setup, you can just use targets[1]
@@ -84,13 +93,20 @@ func main() {
     }
 
     // Use the instance ID to get the API for the instance
-    Hub, ok := API.InstanceLogin(hub_instance_id, "Minecraft").(*modules.Minecraft)
+    HubInstance, err := API.InstanceLogin(hub_instance_id, "Minecraft")
+    if err != nil {
+        panic(err)
+    }
+    Hub, ok := HubInstance.(*modules.Minecraft)
     if !ok {
         panic("Failed to login to instance")
     }
 
     // Get the current CPU usage
-    var currentStatus ampapi.Status = Hub.Core.GetStatus()
+    currentStatus, err := Hub.Core.GetStatus()
+    if err != nil {
+        panic(err)
+    }
     CPUUsagePercent := currentStatus.Metrics["CPU Usage"].Percent
 
     // Send a message to the console
@@ -109,7 +125,10 @@ import (
 )
 
 func main() {
-    API := modules.NewCommonAPI("http://localhost:8080/")
+    API, err := modules.NewCommonAPI("http://localhost:8080/")
+    if err != nil {
+        panic(err)
+    }
 
     // The third parameter is either used for 2FA logins, or if no password is specified to use a remembered token from a previous login, or a service login token.
     loginResult := API.Core.Login("admin", "myfancypassword123", "", false)
