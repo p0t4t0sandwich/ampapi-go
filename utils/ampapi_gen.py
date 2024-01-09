@@ -45,6 +45,7 @@ type_dict = {
     "IEnumerable<IADSInstance>": "[]ampapi.IADSInstance",
     "IEnumerable<IAuditLogEntry>": "[]any",
     "IEnumerable<InstanceDatastore>": "[]ampapi.InstanceDatastore",
+    "IEnumerable<InstanceStatus>": "[]ampapi.InstanceStatus",
     "IEnumerable<JObject>": "[]map[string]any",
     "IEnumerable<ListeningPortSummary>": "[]any",
     "IEnumerable<PortUsage>": "[]any",

@@ -424,11 +424,11 @@ func (a *ADSModule) GetInstanceNetworkInfo(InstanceName string) ([]any, error) {
 
 /* GetInstanceStatuses - 
  * Name Description Optional
- * return []map[string]any
+ * return []ampapi.InstanceStatus
  */
-func (a *ADSModule) GetInstanceStatuses() ([]map[string]any, error) {
+func (a *ADSModule) GetInstanceStatuses() ([]ampapi.InstanceStatus, error) {
     var args = make(map[string]any)
-    var res []map[string]any
+    var res []ampapi.InstanceStatus
     bytes, err := a.ApiCall("ADSModule/GetInstanceStatuses", args)
     json.Unmarshal(bytes, &res)
     return res, err
