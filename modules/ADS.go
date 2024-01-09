@@ -59,7 +59,7 @@ func (ads *ADS) InstanceLogin(instanceId ampapi.UUID, module string) (interface{
 	args["rememberMe"] = true
 
 	var loginResult ampapi.LoginResult
-	res, err := ads.ApiCall("ADSModule/Servers/"+instanceId.String()+"/Login", args)
+	res, err := ads.ApiCall("ADSModule/Servers/"+instanceId.String()+"/API/Core/Login", args)
 	json.Unmarshal(res, &loginResult)
 
 	if loginResult.Success {

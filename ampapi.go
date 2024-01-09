@@ -114,7 +114,7 @@ func (ampapi *AMPAPI) ApiCall(endpoint string, args map[string]any) ([]byte, err
 	var errorResult AMPAPIError
 	json.Unmarshal(result, &errorResult)
 	// TODO: There's an internal library issue with Core/Login that needs to be solved.
-	if endpoint != "Core/Login" && errorResult.Title != "" && errorResult.Message != "" && errorResult.StackTrace != "" {
+	if errorResult.Title != "" && errorResult.Message != "" && errorResult.StackTrace != "" {
 		return nil, fmt.Errorf("%s: %s\n%s", errorResult.Title, errorResult.Message, errorResult.StackTrace)
 	}
 
@@ -129,19 +129,22 @@ func (ampapi *AMPAPI) Login() (LoginResult, error) {
 	args["token"] = ampapi.RememberMeToken
 	args["rememberMe"] = true
 
-	// If remember me token is empty, use the password.
+	// If remember me token exists, don't send the password
 	if ampapi.RememberMeToken != "" {
-		args["password"] = ampapi.Password
+		args["password"] = ""
 	}
 
 	var loginResult LoginResult
 	res, err := ampapi.ApiCall("Core/Login", args)
 	json.Unmarshal(res, &loginResult)
+	if err != nil {
+		return loginResult, err
+	}
 
 	if loginResult.Success {
 		ampapi.SessionId = loginResult.SessionId
 		ampapi.RememberMeToken = loginResult.RememberMeToken
 	}
 
-	return loginResult, err
+	return loginResult, nil
 }
